@@ -1,0 +1,12 @@
+# ignore configuration
+**/*.pyc
+**/.DS_Store
+**/__pycache__/
+/.idea/
+/.vscode/
+/venv/
+
+# ignore files
+/awd/
+/backup/
+/doc/
