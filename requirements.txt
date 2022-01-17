@@ -1,0 +1,9 @@
+colorama~=0.4.4
+ipdb~=0.13.9
+loguru~=0.5.3
+psutil~=5.9.0
+pwntools~=4.7.0
+qiling~=1.4.1
+redis~=4.1.0
+tqdm~=4.62.3
+winpwn~=0.2.4
