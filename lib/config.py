@@ -10,6 +10,7 @@ PT_PATH = Path(__file__).parent.parent
 def init_parser() -> argparse.ArgumentParser:
     # init parser
     parser = argparse.ArgumentParser()
+    parser.add_argument("-a", "--argument", action="store")  # for test
     parser.add_argument("-d", "--debug", action="store_true")
     parser.add_argument("-e", "--env", action="store_true")
     parser.add_argument("-l", "--local", action="store_true")

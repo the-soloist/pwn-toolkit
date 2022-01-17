@@ -70,7 +70,3 @@ class TqdmLogger(object):
     def addr(self, **kwargs):
         for k, v in kwargs.items():
             self.success(f"{k} -> {hex(v)}")
-
-
-pwn_log = PwnLogger()
-tqdm_log = TqdmLogger()

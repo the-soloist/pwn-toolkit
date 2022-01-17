@@ -13,6 +13,9 @@ def delete_unexpected_keyword(arg, klist):
 
 
 def pwnpwnpwn(args, force=None):
+    assert type(args.cmd) == list
+    assert type(args.kwargs) == dict
+
     if force:
         """ sh = pwnpwnpwn(args, force="remote") """
         log.info(f"set {force} mode")
@@ -23,12 +26,9 @@ def pwnpwnpwn(args, force=None):
         sh = remote(host, port)
 
     elif args.local:
-        sh = process(args.binary.path)
+        """ 
+        Run local mode:
 
-    elif args.env:
-        """ Qemu/Env mode usage:
-
-        Env mode demo:
         >>> sh = process([ld.path, binary.path], env={"LD_PRELOAD": libc.path})
         >>> sh = process([f"qemu-{context.arch}", "-g", "9999", "-L", ".", binary.path])
 
@@ -37,16 +37,14 @@ def pwnpwnpwn(args, force=None):
                 "env": {"LD_PRELOAD": "/path/to/libc.so"},  # libc.path
             }
 
-        Qemu mode:
-        1. add gdb script to GDB_SCRIPT:
+        Run with qemu: 
+        1. add gdb script:
             file {file_path}
             target remote :9999
-
             format(file_path=binary.path, **locals())
 
         2. run pt.osys.linux.elf.process.kill_process_by_name("qemu")
 
-        Qemu mode demo: 
         >>> args.cmd = [
                 f"qemu-{context.arch}", 
                 "-g", "9999", 
@@ -59,30 +57,33 @@ def pwnpwnpwn(args, force=None):
         >>> sh = pwnpwnpwn(args)
         """
 
-        assert "cmd" in args
-        if args.cmd is None:
-            print("read usage first")
-            exit()
+        if args.cmd == list():
+            command = args.binary.path
+        else:
+            command = args.cmd
 
-        eq_black_list = ["gdbscript"]
-        delete_unexpected_keyword(args.kwargs, eq_black_list)
+        local_black_list = ["gdbscript"]
+        delete_unexpected_keyword(args.kwargs, local_black_list)
 
-        sh = process(args.cmd, **args.kwargs)
+        sh = process(command, **args.kwargs)
 
     elif args.debug:
-        """ Debug mode usage:
+        """ 
+        Debug mode usage:
 
-        >>> args.kwargs = { 
-                "gdbscript": GDB_SCRIPT, 
-            }
-        >>> sh = pwn_the_world(args)
+        >>> args.kwargs = {"gdbscript": GDB_SCRIPT, }
+        >>> sh = pwnpwnpwn(args)
         """
 
-        dbg_black_list = ["env"]
-        delete_unexpected_keyword(args.kwargs, dbg_black_list)
+        if args.cmd == list():
+            command = args.binary.path
+        else:
+            command = args.cmd
 
-        sh = gdb.debug(args.binary.path, **args.kwargs)
+        debug_black_list = ["env"]
+        delete_unexpected_keyword(args.kwargs, debug_black_list)
 
+        sh = gdb.debug(command, **args.kwargs)
     else:
         from PwnT00ls.utils import parser
         parser.print_help()

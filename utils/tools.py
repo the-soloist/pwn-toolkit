@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pwn import log, gdb, u32, u64, tube
-from string import ascii_letters, digits
+from pwn import u32, u64, tube, process, remote
+from PwnT00ls.lib.logger import plog
+from string import ascii_letters, digits, punctuation
+from typing import Union
 import hashlib
 import itertools
 import os
@@ -17,14 +19,9 @@ sa = lambda delim, data: sh.sendafter(delim, data)
 sl = lambda data: sh.sendline(data)
 sla = lambda delim, data: sh.sendlineafter(delim, data)
 r = lambda numb=0x1000: sh.recv(numb)
-ru = lambda delims, drop=False: sh.recvuntil(delims, drop)
 rl = lambda keepends=True: sh.recvline(keepends)
+ru = lambda delims, drop=False: sh.recvuntil(delims, drop)
 
-# support python2 
-# uu32 = lambda data: u32(data.ljust(4, "\x00"))
-# uu64 = lambda data: u64(data.ljust(8, "\x00"))
-
-# use pt.lib.logger.plog instead
 plog = lambda x: log.success('%s >> %s' % (x, hex(eval(x)))) if type(eval(x)) == int else log.success('%s >> %s' % (x, eval(x)))
 paddr = lambda name, value: log.success("%s -> 0x%x" % (name, value))
 pinfo = lambda *args, end=" ": log.info(("%s" % end).join([str(x) for x in args]))
@@ -36,8 +33,9 @@ tube.sa = tube.sendafter
 tube.sl = tube.sendline
 tube.sla = tube.sendlineafter
 tube.r = tube.recv
-tube.ru = tube.recvuntil
 tube.rl = tube.recvline
+tube.ru = tube.recvuntil
+tube.ia = tube.interactive
 
 uu32 = lambda data: u32(data.ljust(4, b"\x00"))
 uu64 = lambda data: u64(data.ljust(8, b"\x00"))
@@ -68,7 +66,7 @@ def gen_strings_series(s, n=4, r=False):
             yield "".join(random.sample(s, n))
 
 
-def crack_hash(process=None, mode=None, strings=ascii_letters + digits, length=4, random=False):
+def crack_hash(process: Union[process, remote], mode: str, strings=ascii_letters + digits, length=4, random=False):
     """
     @param process: process
     @param mode: 哈希函数
@@ -87,24 +85,24 @@ def crack_hash(process=None, mode=None, strings=ascii_letters + digits, length=4
         plog.error("hash mode is not set")
 
     recv = process.recvuntil(mode)
-    recv = process.recvline().decode()
-    recv = re.split(r"[()+ \n]", recv)
+    recv = process.recvuntil("\n", drop=True).decode()
+    recv = re.split(r"[()+ \"\n]", recv)
 
     res = [x for x in recv if x]
     unknown = res[0]
     salt = res[1]
     target = res[3]
 
-    # check unknown length
-    assert len(unknown) == length
-    plog.waitfor("cracking hash: {} + {} == {}".format("?" * length, salt, target))
+    assert len(unknown) == length  # check unknown length
+    assert mode in dir(hashlib)
+    plog.waitfor(f"cracking: {mode}({'?' * length} + {salt}) == {target}")
 
     for i in gen_strings_series(strings, length, random):
         # print(f"test: {i}")
         plain_text = i + salt
-        hash_func = hashlib.sha256()
+        hash_func = hashlib.__get_builtin_constructor(mode)()
         hash_func.update(plain_text.encode())
         hash_res = hash_func.hexdigest()
         if hash_res == target:
-            plog.success(f"{mode}({plain_text}) == {target}")
-            return plain_text[:length]
+            plog.success(f"found {plain_text}")
+            return plain_text[:length]  # equals. i

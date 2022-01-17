@@ -7,10 +7,19 @@
 ```
 Linux or MacOS
 python 3.10.1
-pwntools 4.7.0
 ```
 
 ## INSTALL
+安装依赖
+```sh
+pip3 install pwntools qiling winpwn \
+    pycryptodome base58 pybase62 base91 \
+    redis ipdb psutil \
+    colorama loguru tqdm
+
+git clone https://github.com/thenoviceoof/base92 pkg/base92
+git clone https://github.com/stek29/base100 pkg/base100
+```
 ```sh
 cd /path/to/PwnT00ls
 PT_PATH=$(dirname "$PWD")

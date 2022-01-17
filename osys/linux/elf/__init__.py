@@ -1,5 +1,6 @@
 from . import compiler
 from . import maps
+from . import mem
 from . import process
 
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PwnT00ls.lib.encode.type2 import t2bytes
+from PwnT00ls.lib.convert.type2 import t2bytes
 import urllib
 
 CRLF = b"\r\n"

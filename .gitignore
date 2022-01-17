@@ -1,6 +1,7 @@
 # ignore configuration
 **/*.pyc
 **/.DS_Store
+**/.nvimlog
 **/__pycache__/
 /.idea/
 /.vscode/

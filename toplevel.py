@@ -8,6 +8,7 @@ try:
 except Exception as e:
     plog.error(e)
 
+
 # import unnecessary modules
 try:
     import traceback
@@ -15,6 +16,7 @@ try:
     from tqdm import tqdm
 
     from PwnT00ls import awd
+    from PwnT00ls import pkg
 except Exception as e:
     plog.warn(e)
 

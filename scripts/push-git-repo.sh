@@ -12,12 +12,13 @@ echo $COMMITl
 set -x
 
 # update requirements.txt
-TMP_PYREQ_PATH="/tmp/.temp-requirements.txt"
-pipreqs . --use-local --print --mode compat >$TMP_PYREQ_PATH && cat $TMP_PYREQ_PATH | sort >./requirements.txt && rm $TMP_PYREQ_PATH
+# TMP_PYREQ_PATH="/tmp/.temp-requirements.txt"
+# pipreqs . --use-local --print --mode compat >$TMP_PYREQ_PATH && cat $TMP_PYREQ_PATH | sort > ./requirements.txt && rm $TMP_PYREQ_PATH
+pipreqs . --mode compat --force
 
 # push repo
 git add .
 git commit -m "$COMMIT"
 git push
-# git push --force origin main
 # git push origin --tags
+# git push --force origin main
