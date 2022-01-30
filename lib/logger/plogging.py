@@ -25,14 +25,13 @@ class PwnLogger(Logger):
         self._save["success"] = self.success
         self._save["warn"] = self.warn
         self._save["error"] = self.error
-        self._save["addr"] = self.addr
+        self._save["address"] = self.address
 
         self._write = TqdmLogger._write
 
-    def addr(self, **kwargs):
+    def address(self, **kwargs):
         for k, v in kwargs.items():
-            msg = f"{k} -> {hex(v)}"
-            self._log(logging.INFO, msg, (), {}, 'success')
+            self._log(logging.INFO, f"{k} -> {hex(v)}", (), {}, 'success')
 
     def _write():
         pass
@@ -67,6 +66,6 @@ class TqdmLogger(object):
         self._write(f"{error}{msg}")
         raise PwnlibException(msg)
 
-    def addr(self, **kwargs):
+    def address(self, **kwargs):
         for k, v in kwargs.items():
             self.success(f"{k} -> {hex(v)}")

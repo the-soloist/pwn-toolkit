@@ -44,5 +44,5 @@ prefix_error = Style.BRIGHT + Fore.WHITE + Back.RED
 
 if __name__ == "__main__":
     print_color_list()
-    redAblack = Style.BRIGHT + Fore.RED + Back.BLACK
-    print(f"{prefix_error}test color{end}")
+    # redAblack = Style.BRIGHT + Fore.RED + Back.BLACK
+    # print(f"{prefix_error}test color{end}")

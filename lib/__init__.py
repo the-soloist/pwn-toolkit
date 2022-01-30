@@ -6,19 +6,19 @@ from . import logger
 from . import config
 
 
-def try_import(name):
+def try_import(path, name):
     try:
-        exec(f"from . import {name}")
+        exec(f"from {path} import {name}")
     except Exception as e:
-        print(f"import lib.{name} error, except {e}")
+        print(f"cannot import lib.{name}, exception: {e}.")
 
 
-try_import("crypt")
-try_import("database")
-try_import("emu")
-try_import("encode")
-try_import("http")
-try_import("shellcode")
+try_import(".", "crypt")
+try_import(".", "database")
+try_import(".", "emu")
+try_import(".", "encode")
+try_import(".", "http")
+try_import(".", "shellcode")
 
 
 parser = config.init_parser()

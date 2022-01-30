@@ -19,7 +19,7 @@ if not log_path.is_file():
 # 终端日志输出格式
 stdout_fmt = (
     "<cyan>{time:HH:mm:ss}</cyan> "
-    "[<level>{level: <8}</level>] "
+    "[<level>{level: >8}</level>] "
     "<blue>{module}</blue>:<cyan>{line}</cyan> - "
     "<level>{message}</level>"
 )
@@ -27,7 +27,7 @@ stdout_fmt = (
 # 日志文件记录格式
 logfile_fmt = (
     "<light-green>{time:YYYY-MM-DD HH:mm:ss.SSS}</light-green> "
-    "[<level>{level: <8}</level>] "
+    "[<level>{level: >8}</level>] "
     "<blue>{module}</blue>.<blue>{function}</blue>:"
     "<blue>{line}</blue> - <level>{message}</level>"
 )

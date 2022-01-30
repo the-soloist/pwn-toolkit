@@ -10,20 +10,22 @@ python 3.10.1
 ```
 
 ## INSTALL
-安装依赖
 ```sh
-pip3 install pwntools qiling winpwn \
-    pycryptodome base58 pybase62 base91 \
-    redis ipdb psutil \
-    colorama loguru tqdm
+# 安装依赖 
+pip3 install -r requirements.txt
+pip3 install pwntools==4.3.1 --user
+pip3 install base58 pybase62 base91 psutil prettytable termcolor tabulate pycryptodome
 
 git clone https://github.com/thenoviceoof/base92 pkg/base92
 git clone https://github.com/stek29/base100 pkg/base100
-```
-```sh
+
+# 导入模块
 cd /path/to/PwnT00ls
-PT_PATH=$(dirname "$PWD")
-export PYTHONPATH=$PYTHONPATH:$PT_PATH
+PT_DIR=$(dirname "$PWD")
+export PYTHONPATH="$PYTHONPATH:$PT_DIR"
+
+# 修改环境变量
+export PATH="$PATH:/path/to/PwnT00ls/bin"
 ```
 
 ## USAGE

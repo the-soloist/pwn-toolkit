@@ -50,9 +50,8 @@ def pwnpwnpwn(args, force=None):
                 "-g", "9999", 
                 "-L", ".", binary.path
             ]
-
         or 
-        >>> args.cmd = "./run.sh"
+        >>> args.cmd = ["./run.sh"]
 
         >>> sh = pwnpwnpwn(args)
         """
@@ -85,7 +84,7 @@ def pwnpwnpwn(args, force=None):
 
         sh = gdb.debug(command, **args.kwargs)
     else:
-        from PwnT00ls.utils import parser
+        from PwnT00ls.lib import parser
         parser.print_help()
         exit(0)
 

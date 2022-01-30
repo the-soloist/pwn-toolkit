@@ -1,5 +1,6 @@
 # ignore configuration
 **/*.pyc
+**/.clang-format
 **/.DS_Store
 **/.nvimlog
 **/__pycache__/
@@ -10,4 +11,3 @@
 # ignore files
 /awd/
 /backup/
-/doc/
