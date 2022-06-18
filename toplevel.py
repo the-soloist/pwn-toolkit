@@ -1,9 +1,11 @@
 import PwnT00ls as pt
-from PwnT00ls.lib.logger import *
+from PwnT00ls.lib.logger import plog, tlog
 
 try:
-    from PwnT00ls.lib import *
-    from PwnT00ls.osys import *
+    from PwnT00ls import lib as pt_lib
+    from PwnT00ls import osys as pt_os
+    from PwnT00ls import utils as pt_util
+
     from PwnT00ls.utils import *
 except Exception as e:
     plog.error(e)
@@ -15,14 +17,15 @@ try:
     import ipdb
     from tqdm import tqdm
 
-    from PwnT00ls import awd
-    from PwnT00ls import pkg
+    from PwnT00ls import awd as pt_awd
+    from PwnT00ls import pkg as pt_pkg
 except Exception as e:
     plog.warn(e)
 
 
 # alias
 pwn_the_world = pwnpwnpwn
+log = plog
 
 
 __all__ = [x for x in globals().keys() if x != '__name__']
