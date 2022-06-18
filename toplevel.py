@@ -6,6 +6,7 @@ try:
     from PwnT00ls import osys as pt_os
     from PwnT00ls import utils as pt_util
 
+    from PwnT00ls.lib import parser
     from PwnT00ls.utils import *
 except Exception as e:
     plog.error(e)
