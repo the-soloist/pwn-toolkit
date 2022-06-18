@@ -26,7 +26,9 @@ def pdebug(sh, gdbscript="", bpl=[], gds={}):
     gdb.attach(sh, res)
 
 
-class NewTube(tube):
+class PwnTube(tube):
+    """ PwnT00ls Tube """
+
     def dbg(self, gdbscript="", bpl=[], gds={}):
         """ reference: https://github.com/pullp/pwn_framework
         @param bpl: break point list
@@ -51,4 +53,4 @@ class NewTube(tube):
         gdb.attach(self, res)
 
 
-tube.dbg = NewTube.dbg
+tube.dbg = PwnTube.dbg
