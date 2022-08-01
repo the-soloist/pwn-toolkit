@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pwn import process, remote, gdb, log
+from pwn import process, remote, gdb, log, pause
 
 
 def delete_unexpected_keyword(arg, klist):
@@ -24,10 +24,11 @@ def pwnpwnpwn(args, force=None):
     if args.remote:
         host, port = args.target
         sh = remote(host, port)
+        sh.process_mode = "remote"
 
     elif args.local:
         """ 
-        Run local mode:
+        Run with local mode:
 
         >>> sh = process([ld.path, binary.path], env={"LD_PRELOAD": libc.path})
         >>> sh = process([f"qemu-{context.arch}", "-g", "9999", "-L", ".", binary.path])
@@ -39,11 +40,17 @@ def pwnpwnpwn(args, force=None):
 
         Run with qemu: 
         1. add gdb script:
+            ```
             file {file_path}
             target remote :9999
             format(file_path=binary.path, **locals())
+            ```
 
-        2. run pt.osys.linux.elf.process.kill_process_by_name("qemu")
+        2. add to py
+            ```
+            from PwnT00ls.osys.linux.elf.process import kill_process_by_name
+            kill_process_by_name("qemu")
+            ```
 
         >>> args.cmd = [
                 f"qemu-{context.arch}", 
@@ -65,10 +72,11 @@ def pwnpwnpwn(args, force=None):
         delete_unexpected_keyword(args.kwargs, local_black_list)
 
         sh = process(command, **args.kwargs)
+        sh.process_mode = "local"
 
     elif args.debug:
         """ 
-        Debug mode usage:
+        Run with debug mode:
 
         >>> args.kwargs = {"gdbscript": GDB_SCRIPT, }
         >>> sh = pwnpwnpwn(args)
@@ -83,6 +91,8 @@ def pwnpwnpwn(args, force=None):
         delete_unexpected_keyword(args.kwargs, debug_black_list)
 
         sh = gdb.debug(command, **args.kwargs)
+        sh.process_mode = "debug"
+
     else:
         from PwnT00ls.lib import parser
         parser.print_help()

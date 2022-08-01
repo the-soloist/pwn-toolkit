@@ -66,43 +66,35 @@ def gen_strings_series(s, n=4, r=False):
             yield "".join(random.sample(s, n))
 
 
-def crack_hash(process: Union[process, remote], mode: str, strings=ascii_letters + digits, length=4, random=False):
+def crack_hash(mode: str, target: str, prefix="", suffix="", strings=ascii_letters + digits, length=4, random=False):
     """
-    @param process: process
     @param mode: 哈希函数
+    @param target: 目标哈希值
+    @param prefix: 前缀
+    @param suffix: 后缀
     @param strings: 字符集，默认为大小写字母+数字
     @param length: 爆破长度
     @param random: 随机字典
-
-    test: sha256(xxxx+Mur3KLdGC2FdKSxq) == cc5b1820c0cff0f269ef91234b6567bf55c655dbbe80b5c911951b591aa1212
     """
 
     from PwnT00ls.lib.logger import plog
 
-    if not process:
-        plog.error("process is not set")
-    if not mode:
-        plog.error("hash mode is not set")
+    if not prefix and not suffix:
+        plog.error("Please set prefix or suffix.")
 
-    recv = process.recvuntil(mode)
-    recv = process.recvuntil("\n", drop=True).decode()
-    recv = re.split(r"[()+ \"\n]", recv)
-
-    res = [x for x in recv if x]
-    unknown = res[0]
-    salt = res[1]
-    target = res[3]
-
-    assert len(unknown) == length  # check unknown length
     assert mode in dir(hashlib)
-    plog.waitfor(f"cracking: {mode}({'?' * length} + {salt}) == {target}")
+
+    plog.waitfor(f"cracking: {mode}({' + '.join([x for x in [prefix, '?' * length, suffix] if x])}) == {target}")
 
     for i in gen_strings_series(strings, length, random):
-        # print(f"test: {i}")
-        plain_text = i + salt
+        plain_text = prefix + i + suffix
+        # print(f"test: {plain_text}")
         hash_func = hashlib.__get_builtin_constructor(mode)()
         hash_func.update(plain_text.encode())
         hash_res = hash_func.hexdigest()
         if hash_res == target:
-            plog.success(f"found {plain_text}")
-            return plain_text[:length]  # equals. i
+            plog.success(f"found {mode}({plain_text}) == {target}")
+            return i
+
+    plog.failure("not found")
+    return None

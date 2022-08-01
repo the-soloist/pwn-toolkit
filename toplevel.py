@@ -26,7 +26,6 @@ except Exception as e:
 
 # alias
 pwn_the_world = pwnpwnpwn
-log = plog
 
 
 __all__ = [x for x in globals().keys() if x != '__name__']

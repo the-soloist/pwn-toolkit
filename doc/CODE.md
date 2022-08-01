@@ -1,5 +1,7 @@
 # CODE
-## debug python 
+
+## debug python
+
 ```python
 import ipdb; ipdb.set_trace()
 ```
@@ -14,7 +16,7 @@ text_base, libc_base = util.maps.get_base(sh=sh)  # get_base(libs=sh.libs(), elf
 paddr("text_base", text_base)
 paddr("libc_base", libc_base)
 
-### print heap base 
+### print heap base
 heap_base = int("0x%s" % get_heap_map(sh).addr.split("-")[0], 16)
 paddr("heap_base", heap_base)
 
@@ -55,7 +57,7 @@ os.path.dirname(os.path.realpath(__file__))
 os.path.split(os.path.realpath(__file__))
 ```
 
-[Python获取当前文件路径](https://www.jianshu.com/p/bfa29141437e)
+[Python 获取当前文件路径](https://www.jianshu.com/p/bfa29141437e)
 
 [Python3 中使用 Pathlib 模块进行文件操作](https://cuiqingcai.com/6598.html)
 
@@ -66,13 +68,18 @@ from PwnT00ls.utils.compiler import *
 
 symbol_file = compile_symbol_file("./symbols.c")
 
-GDB_SCRIPT = f""" 
+GDB_SCRIPT = f"""
 add-symbol-file {symbol_file}
 """.strip()
 ```
 
-## crack hash 
-```python 
-res = crack_hash(process=p, mode="sha256", strings=ascii_letters+digits, length=4, random=False)
-sla("give me xxxx:", res)
+## crack hash
+
+```python
+p.recvuntil(b"prefix: ")
+prefix = p.recvuntil(b"\n", drop=True).decode()
+p.recvuntil(b"target: ")
+target = p.recvuntil(b"\n", drop=True).decode()
+res = crack_hash("sha256", target, prefix=prefix, strings=printable, length=3)
+p.sendlineafter("input: ", res)
 ```

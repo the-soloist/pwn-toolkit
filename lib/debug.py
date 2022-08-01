@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pwn import log, gdb, u32, u64, tube
+from pwn import log, gdb, u32, u64, tube, pause
 
 
 def pdebug(sh, gdbscript="", bpl=[], gds={}):
@@ -34,6 +34,17 @@ class PwnTube(tube):
         @param bpl: break point list
         @param gds: gdb debug symbols
         """
+
+        if hasattr(self, "process_mode"):
+            if self.process_mode != "local":
+                log.warning(f"you are running gdb with {self.process_mode} mode")
+                pause()
+                return
+            else:
+                pass
+        else:
+            pass
+
         script_lines = list()
 
         # add break point list
