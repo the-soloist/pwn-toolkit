@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PwnT00ls import *
-from PwnT00ls.osys.linux.rop import *
+from pwn_utils import *
+from pwn_utils.osys.linux.rop import *
 
 
 start = time.time()

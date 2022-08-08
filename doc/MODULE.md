@@ -7,5 +7,5 @@
 ### heap
 
 ```python
-from PwnT00ls.osys.linux.heap.utils import *
+from pwn_utils.osys.linux.heap.utils import *
 ```

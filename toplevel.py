@@ -1,13 +1,10 @@
-import PwnT00ls as pt
-from PwnT00ls.lib.logger import plog, tlog
+import pwn_utils as pwnutils
+from pwn_utils.lib.logger import plog, tlog
 
 try:
-    from PwnT00ls import lib as pt_lib
-    from PwnT00ls import osys as pt_os
-    from PwnT00ls import utils as pt_util
-
-    from PwnT00ls.lib import parser
-    from PwnT00ls.utils import *
+    from pwn_utils.lib import parser
+    from pwn_utils.lib.entry import pwnpwnpwn
+    from pwn_utils.lib.tools import *
 except Exception as e:
     plog.error(e)
 
@@ -17,9 +14,6 @@ try:
     import traceback
     import ipdb
     from tqdm import tqdm
-
-    from PwnT00ls import awd as pt_awd
-    from PwnT00ls import pkg as pt_pkg
 except Exception as e:
     plog.warn(e)
 

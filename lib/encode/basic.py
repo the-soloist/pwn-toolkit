@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PwnT00ls.lib.convert.type2 import t2str, t2bytes
+from pwn_utils.lib.convert.type2 import t2str, t2bytes
 import html
 import urllib
 

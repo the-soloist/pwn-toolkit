@@ -28,7 +28,7 @@ def pdebug(sh, gdbscript="", bpl=[], gds={}):
 
 
 class PwnTube(tube):
-    """ PwnT00ls Tube """
+    """ pwn_utils Tube """
 
     def dbg(self, gdbscript="", gds: dict = {}, bpl: list = []):
         """

@@ -4,7 +4,7 @@
 from pwn import log
 from pwnlib.exception import PwnlibException
 from pwnlib.log import Logger
-from PwnT00ls.lib.color.colors import *
+from pwn_utils.lib.color.colors import *
 from tqdm import tqdm
 import logging
 
@@ -17,7 +17,7 @@ error = f"[{prefix_error}ERROR{end}] "
 
 class PwnLogger(Logger):
     def __init__(self):
-        logger = logging.getLogger("pwnlib.PwnT00ls")
+        logger = logging.getLogger("pwnlib.pwn_utils")
         self._logger = logger
 
         self._save = dict()

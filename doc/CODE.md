@@ -64,7 +64,7 @@ os.path.split(os.path.realpath(__file__))
 ## add symbol file
 
 ```python
-from PwnT00ls.utils.compiler import *
+from pwn_utils.utils.compiler import *
 
 symbol_file = compile_symbol_file("./symbols.c")
 

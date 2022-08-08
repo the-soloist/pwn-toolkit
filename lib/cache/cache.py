@@ -3,7 +3,7 @@
 
 from hashlib import md5
 from pathlib import Path
-from PwnT00ls.lib.config import PT_PATH
+from pwn_utils.lib.config import PT_PATH
 import json
 
 

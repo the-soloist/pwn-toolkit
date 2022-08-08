@@ -48,7 +48,7 @@ def pwnpwnpwn(args, force=None):
 
         2. add to py
             ```
-            from PwnT00ls.osys.linux.elf.process import kill_process_by_name
+            from pwn_utils.osys.linux.elf.process import kill_process_by_name
             kill_process_by_name("qemu")
             ```
 
@@ -94,7 +94,7 @@ def pwnpwnpwn(args, force=None):
         sh.process_mode = "debug"
 
     else:
-        from PwnT00ls.lib import parser
+        from pwn_utils.lib import parser
         parser.print_help()
         exit(0)
 

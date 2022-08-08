@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PwnT00ls.lib.convert.type2 import *
-from PwnT00ls.osys.linux.elf.mem import str2mem
+from pwn_utils.lib.convert.type2 import *
+from pwn_utils.osys.linux.elf.mem import str2mem
 
 
 s1 = "/path/to/flag"

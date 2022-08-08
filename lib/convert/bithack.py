@@ -3,7 +3,7 @@
 # reference:
 #   1. https://xuanxuanblingbling.github.io/ctf/tools/2021/01/10/bu/
 
-from PwnT00ls.lib.logger import plog
+from pwn_utils.lib.logger import plog
 import struct
 
 

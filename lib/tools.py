@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from pwn import u32, u64, tube, process, remote
-from PwnT00ls.lib.logger import plog
+from pwn_utils.lib.logger import plog
 from string import ascii_letters, digits, punctuation
 from typing import Union
 import hashlib
@@ -77,7 +77,7 @@ def crack_hash(mode: str, target: str, prefix="", suffix="", strings=ascii_lette
     @param random: 随机字典
     """
 
-    from PwnT00ls.lib.logger import plog
+    from pwn_utils.lib.logger import plog
 
     if not prefix and not suffix:
         plog.error("Please set prefix or suffix.")

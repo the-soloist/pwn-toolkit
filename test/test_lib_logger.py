@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PwnT00ls.lib.logger import *
+from pwn_utils.lib.logger import *
 
 
 tlog.info("testing tqdm logger")
