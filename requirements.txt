@@ -1,10 +1,11 @@
 base58~=2.1.1
 base91~=1.0.1
-colorama~=0.4.4
+colorama~=0.4.5
 ipdb~=0.13.9
 loguru~=0.6.0
-psutil~=5.9.0
-pwntools~=4.7.0
-redis~=4.1.2
-tqdm~=4.62.3
+psutil~=5.9.1
+pwntools~=4.8.0
+qiling~=1.4.3
+redis~=4.3.4
+tqdm~=4.64.0
 winpwn~=0.2.4
