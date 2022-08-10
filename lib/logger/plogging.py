@@ -29,9 +29,15 @@ class PwnLogger(Logger):
 
         self._write = TqdmLogger._write
 
-    def address(self, **kwargs):
+    def _vars(self, t="=", **kwargs):
         for k, v in kwargs.items():
-            self._log(logging.INFO, f"{k} -> {hex(v)}", (), {}, 'success')
+            self._log(logging.INFO, f"{k} {t} {hex(v)}", (), {}, 'success')
+
+    def address(self, **kwargs):
+        self._vars("->", **kwargs)
+
+    def value(self, **kwargs):
+        self._vars("=", **kwargs)
 
     def _write():
         pass
