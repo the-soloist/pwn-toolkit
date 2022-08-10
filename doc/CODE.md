@@ -39,15 +39,15 @@ for _ in range(0x10):
         break
 ```
 
-## compile symbol file
+## compile and add symbol file
 
 ```python
 ### compile symbol file
 salt = get_salt()
-gdb_symbol_file = compile_symbol_file("./http_struct.c")
+symbol_file = compile_symbol_file("./symbols.c", salt, 64)
 GDBSCRIPT += f"\nadd-symbol-file {symbol_file}\n"
 # sh = process([ld.path, elf.path], env={"LD_PRELOAD": gdb_symbol_file})
-pdebug(sh, GDB_SCRIPT)
+p.dbg(GDB_SCRIPT)
 ```
 
 ## os.path / pathlib
@@ -60,18 +60,6 @@ os.path.split(os.path.realpath(__file__))
 [Python 获取当前文件路径](https://www.jianshu.com/p/bfa29141437e)
 
 [Python3 中使用 Pathlib 模块进行文件操作](https://cuiqingcai.com/6598.html)
-
-## add symbol file
-
-```python
-from pwn_utils.utils.compiler import *
-
-symbol_file = compile_symbol_file("./symbols.c")
-
-GDB_SCRIPT = f"""
-add-symbol-file {symbol_file}
-""".strip()
-```
 
 ## crack hash
 
