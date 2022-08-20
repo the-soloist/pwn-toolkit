@@ -20,3 +20,9 @@ except Exception as e:
 
 # alias
 pwn_the_world = pwnpwnpwn
+
+
+# init
+GDS = {}
+BPL = []
+GDB_SCRIPT = ""
