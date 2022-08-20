@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pwn import process, remote, gdb, log, pause
+from pwn import process, remote, gdb, log, pause, context
+import os
 
 
 def delete_unexpected_keyword(arg, klist):
@@ -20,6 +21,13 @@ def pwnpwnpwn(args, force=None):
         """ sh = pwnpwnpwn(args, force="remote") """
         log.info(f"set {force} mode")
         setattr(args, force, True)
+
+    # set context.terminal
+    if os.getenv("TMUX"):
+        if len(context.terminal) == 0:
+            split_horizon = os.get_terminal_size().columns - 90
+            context.terminal = ["tmux", "sp", "-h", "-l", str(split_horizon)]
+            log.info(f"set `context.terminal = {str(context.terminal)}`")
 
     if args.remote:
         host, port = args.target

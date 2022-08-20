@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pwn import log, gdb, u32, u64, tube, pause, context
-import os
+from pwn import log, gdb, u32, u64, tube, pause
 
 
 def pdebug(sh, gdbscript="", bpl=[], gds={}):
@@ -42,13 +41,6 @@ class PwnTube(tube):
                 log.warning(f"you are running gdb with {self.process_mode} mode")
                 pause()
                 return
-
-        # set context.terminal
-        if os.getenv("TMUX"):
-            if len(context.terminal) == 0:
-                split_horizon = os.get_terminal_size().columns - 90
-                context.terminal = ["tmux", "sp", "-h", "-l", str(split_horizon)]
-                log.info(f"set `context.terminal = {str(context.terminal)}`")
 
         script_lines = list()
 
