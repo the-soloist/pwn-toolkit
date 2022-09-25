@@ -17,6 +17,7 @@ def init_parser() -> argparse.ArgumentParser:
     group.add_argument("-d", "--debug", action="store_true")
     group.add_argument("-l", "--local", action="store_true")
     group.add_argument("-r", "--remote", action="store_true")
+    group.add_argument("-w", "--websocket", action="store_true")
 
     # init awd sub parser
     subparsers = parser.add_subparsers(help='sub command')

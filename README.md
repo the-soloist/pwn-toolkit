@@ -15,7 +15,7 @@ python 3.10.1
 # 安装依赖
 pip3 install -r requirements.txt
 pip3 install pwntools==4.3.1 --user
-pip3 install pybase62 psutil prettytable termcolor tabulate pycryptodome
+pip3 install pybase62 psutil prettytable termcolor tabulate pycryptodome websocket-client
 
 git clone https://github.com/thenoviceoof/base92 pkg/base92
 git clone https://github.com/stek29/base100 pkg/base100

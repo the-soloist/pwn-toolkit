@@ -6,6 +6,7 @@ from . import debug
 from . import entry
 from . import logger
 from . import tools
+from . import tubes
 
 
 def try_import(path, name):

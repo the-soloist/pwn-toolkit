@@ -34,6 +34,11 @@ def pwnpwnpwn(args, force=None):
         sh = remote(host, port)
         sh.process_mode = "remote"
 
+    elif args.websocket:
+        from pwn_utils.lib.tubes import websocket
+        sh = websocket(args.target)
+        sh.process_mode = "websocket"
+
     elif args.local:
         """ 
         Run with local mode:
