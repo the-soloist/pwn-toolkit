@@ -39,7 +39,7 @@ class PwnTube(tube):
         if hasattr(self, "process_mode"):
             if self.process_mode != "local":
                 log.warning(f"you are running gdb with {self.process_mode} mode")
-                pause()
+                # pause()
                 return
 
         script_lines = list()
