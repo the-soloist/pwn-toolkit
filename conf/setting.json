@@ -1,0 +1,8 @@
+{
+  "cache": {
+    "save_dir": "/tmp/pwn-utils/cache"
+  },
+  "log": {
+    "save_dir": "/tmp/pwn-utils/log"
+  }
+}

@@ -9,7 +9,7 @@ import json
 import sys
 
 
-log_dir = json.load(open(PT_PATH / "conf/pt.json"))["log"]["save_dir"]
+log_dir = json.load(open(PT_PATH / "conf/setting.json"))["log"]["save_dir"]
 log_path = Path(log_dir) / "pt.log"
 
 if not log_path.is_file():

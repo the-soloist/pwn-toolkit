@@ -7,7 +7,7 @@ from pwn_utils.lib.config import PT_PATH
 import json
 
 
-CACHE_DIR = Path(json.load(open(PT_PATH / "conf/pt.json"))["cache"]["save_dir"])
+CACHE_DIR = Path(json.load(open(PT_PATH / "conf/setting.json"))["cache"]["save_dir"])
 
 if not CACHE_DIR.is_dir():
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
