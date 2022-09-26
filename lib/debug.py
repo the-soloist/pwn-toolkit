@@ -35,10 +35,11 @@ class PwnTube(tube):
         @param gds: gdb debug symbols
         """
 
-        # pass local mode
+        # pass remote mode
         if hasattr(self, "process_mode"):
             if self.process_mode != "local":
-                log.warning(f"you are running gdb with {self.process_mode} mode")
+                # TODO add support for remote debug
+                log.warning(f"not support remote debug, for now.")
                 # pause()
                 return
 
