@@ -6,7 +6,7 @@
 
 ```
 Linux or MacOS
-python 3.10.1
+python 3.10.x
 ```
 
 ## INSTALL
