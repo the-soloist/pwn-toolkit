@@ -4,7 +4,7 @@
 from pwn import log
 from pwnlib.exception import PwnlibException
 from pwnlib.log import Logger
-from pwn_utils.lib.color.colors import *
+from pwn_utils.lib.color import *
 from tqdm import tqdm
 import logging
 
