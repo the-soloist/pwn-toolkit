@@ -1,5 +1,5 @@
-from .plogger import logger
-from .plogging import PwnLogger, TqdmLogger
+from .logger import logger
+from .pwnlog import PwnLogger, TqdmLogger
 
 
 plog = PwnLogger()
