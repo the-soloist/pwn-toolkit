@@ -1,16 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+
+import os
 from pwn import u32, u64, tube, process, remote
 from pwnutils.lib.logger import plog
-from string import ascii_letters, digits, punctuation
-from typing import Union
-import hashlib
-import itertools
-import os
-import random
-import re
-import sys
 
 
 """ 
@@ -54,50 +48,6 @@ def dump_remote_binary(sh, output, prefix, suffix):
     data = sh.recvuntil(suffix, drop=True)
     open(output, "wb").write(data)
     return data
-
-
-def gen_strings_series(s, n=4, r=False):
-    """ s: strings, n: length, r: random"""
-    if r == False:
-        for i in itertools.product(s, repeat=n):
-            yield "".join(i)
-    else:
-        while True:
-            yield "".join(random.sample(s, n))
-
-
-def crack_hash(mode: str, target: str, prefix="", suffix="", strings=ascii_letters + digits, length=4, random=False):
-    """
-    @param mode: 哈希函数
-    @param target: 目标哈希值
-    @param prefix: 前缀
-    @param suffix: 后缀
-    @param strings: 字符集，默认为大小写字母+数字
-    @param length: 爆破长度
-    @param random: 随机字典
-    """
-
-    from pwnutils.lib.logger import plog
-
-    if not prefix and not suffix:
-        plog.error("Please set prefix or suffix.")
-
-    assert mode in dir(hashlib)
-
-    plog.waitfor(f"cracking: {mode}({' + '.join([x for x in [prefix, '?' * length, suffix] if x])}) == {target}")
-
-    for i in gen_strings_series(strings, length, random):
-        plain_text = prefix + i + suffix
-        # print(f"test: {plain_text}")
-        hash_func = hashlib.__get_builtin_constructor(mode)()
-        hash_func.update(plain_text.encode())
-        hash_res = hash_func.hexdigest()
-        if hash_res == target:
-            plog.success(f"found {mode}({plain_text}) == {target}")
-            return i
-
-    plog.failure("not found")
-    return None
 
 
 def get_salt():
