@@ -2,6 +2,7 @@ from . import cache
 from . import color
 from . import config
 from . import convert
+from . import crypto
 from . import debug
 from . import entry
 from . import logger
