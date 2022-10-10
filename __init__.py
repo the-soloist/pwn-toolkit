@@ -1,14 +1,22 @@
-import pwn_utils as pwnutils
-from pwn_utils.lib.logger import plog, tlog
+import pwnutils as pu
+from pwnutils.lib.logger import plog, tlog
 
 
 try:
-    from pwn_utils.lib import parser
-    from pwn_utils.lib.entry import pwnpwnpwn
-    from pwn_utils.lib.tools import *
+    from pwnutils import osys
+    from pwnutils import lib
+
+    from pwnutils.lib import parser
+    from pwnutils.lib.entry import pwnpwnpwn
+    from pwnutils.lib.tools import *
 except Exception as e:
     plog.error(e)
 
+
+try:
+    from pwn import *
+except Exception as e:
+    plog.error(e)
 
 try:
     import traceback

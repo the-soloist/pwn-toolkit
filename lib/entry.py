@@ -35,7 +35,7 @@ def pwnpwnpwn(args, force=None):
         sh.process_mode = "remote"
 
     elif args.websocket:
-        from pwn_utils.lib.tubes import websocket
+        from pwnutils.lib.tubes import websocket
         sh = websocket(args.target)
         sh.process_mode = "websocket"
 
@@ -61,7 +61,7 @@ def pwnpwnpwn(args, force=None):
 
         2. add to py
             ```
-            from pwn_utils.osys.linux.elf.process import kill_process_by_name
+            from pwnutils.osys.linux.elf.process import kill_process_by_name
             kill_process_by_name("qemu")
             ```
 
@@ -107,7 +107,7 @@ def pwnpwnpwn(args, force=None):
         sh.process_mode = "debug"
 
     else:
-        from pwn_utils.lib import parser
+        from pwnutils.lib import parser
         parser.print_help()
         exit(0)
 

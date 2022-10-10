@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pwn_utils.lib.convert.type2 import bytes2int, t2bytes
+from pwnutils.lib.convert.type2 import bytes2int, t2bytes
 
 
 def bytes2mem(string, mode=64, endian="little"):
     """ Usage:
-    
+
     bytes2mem("/path/to/flag", 64, "little") -> [0x6f742f687461702f, 0x67616c662f]
     """
 

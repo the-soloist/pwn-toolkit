@@ -4,7 +4,7 @@
 
 from loguru import logger
 from pathlib import Path
-from pwn_utils.lib.config import PT_PATH
+from pwnutils.lib.config import PT_PATH
 import json
 import sys
 

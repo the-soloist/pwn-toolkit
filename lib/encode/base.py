@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pwn_utils.lib.convert.type2 import t2str, t2bytes
-from pwn_utils.pkg import base92, base100
+from pwnutils.lib.convert.type2 import t2str, t2bytes
+from pwnutils.pkg import base92, base100
 import base58
 import base62
 import base64

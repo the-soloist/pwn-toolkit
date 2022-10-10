@@ -1,4 +1,4 @@
-# pwn_utils
+# pwnutils
 
 封装一些常用的功能 \_(:з」∠)\_
 
@@ -21,22 +21,22 @@ git clone https://github.com/thenoviceoof/base92 pkg/base92
 git clone https://github.com/stek29/base100 pkg/base100
 
 # 导入模块
-PWNUTILS_DIR="/path/to/pwn_utils"
+PWNUTILS_DIR="/path/to/pwnutils"
 git clone https://github.com/the-soloist/pwn-utils $PWNUTILS_DIR
 export PYTHONPATH="$PYTHONPATH:$PWNUTILS_DIR"
 
 # 或者 python 中加入
-sys.path.append("/path/to/pwn_utils")
+sys.path.append("/path/to/pwnutils")
 
 # 修改环境变量
-export PATH="$PATH:/path/to/pwn_utils/bin"
+export PATH="$PATH:/path/to/pwnutils/bin"
 ```
 
 ## USAGE
 
 ```python
-from pwn_utils import *
 from pwn import *
+from pwnutils import *
 ```
 
 # REFERENCE
