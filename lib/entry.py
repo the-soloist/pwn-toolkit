@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pwn import process, remote, gdb, log, pause, context
 import os
+from pwn import process, remote, gdb, log, pause, context
 
 
 def delete_unexpected_keyword(arg, klist):

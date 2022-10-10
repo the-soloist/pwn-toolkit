@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pwnutils.lib.convert.type2 import t2str, t2bytes
-from pwnutils.pkg import base92, base100
 import base58
 import base62
 import base64
 import base91
+from pwnutils.lib.convert.type2 import t2str, t2bytes
+from pwnutils.pkg import base92, base100
 
 
 default_b64_table = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"

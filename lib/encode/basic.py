@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pwnutils.lib.convert.type2 import t2str, t2bytes
 import html
 import urllib
+from pwnutils.lib.convert.type2 import t2str, t2bytes
 
 
 def hex_encode(text) -> str:

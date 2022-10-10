@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import logging
 from pwn import log
 from pwnlib.exception import PwnlibException
 from pwnlib.log import Logger
 from pwnutils.lib.color import *
 from tqdm import tqdm
-import logging
 
 
 info = f"[{prefix_info}*{end}] "

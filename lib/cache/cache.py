@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import json
 from hashlib import md5
 from pathlib import Path
 from pwnutils.lib.config import PT_PATH
-import json
 
 
 CACHE_DIR = Path(json.load(open(PT_PATH / "conf/setting.json"))["cache"]["save_dir"])

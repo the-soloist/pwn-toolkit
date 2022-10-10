@@ -3,8 +3,8 @@
 # reference:
 #   1. https://xuanxuanblingbling.github.io/ctf/tools/2021/01/10/bu/
 
-from pwnutils.lib.logger import plog
 import struct
+from pwnutils.lib.logger import plog
 
 
 def uint8(n):

@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 # edit from https://github.com/shmilylty/OneForAll/blob/master/config/log.py
 
+import json
+import sys
 from loguru import logger
 from pathlib import Path
 from pwnutils.lib.config import PT_PATH
-import json
-import sys
 
 
 log_dir = json.load(open(PT_PATH / "conf/setting.json"))["log"]["save_dir"]

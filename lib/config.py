@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from pathlib import Path
 import argparse
+from pathlib import Path
+
 
 PT_PATH = Path(__file__).parent.parent
 
