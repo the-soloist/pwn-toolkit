@@ -34,9 +34,9 @@ logfile_fmt = (
 
 logger.remove()
 
-# 如果你想在命令终端静默运行，可以将以下一行中的 level 设置为 QUITE
-logger.add(sys.stderr, level="INFO", format=stdout_fmt, enqueue=True)  # 命令终端日志级别默认为INFOR
-logger.add(log_path, level="TRACE", format=logfile_fmt, enqueue=True, encoding="utf-8")  # 日志文件默认为级别为DEBUG
+# logger.remove(handler_id=None)  # 控制台静默运行
+logger.add(sys.stderr, level="INFO", format=stdout_fmt, enqueue=True)  # 命令终端日志级别默认为 INFO
+logger.add(log_path, level="TRACE", format=logfile_fmt, enqueue=True, encoding="utf-8")  # 日志文件默认为级别为 TRACE
 
 
 if __name__ == "__main__":
