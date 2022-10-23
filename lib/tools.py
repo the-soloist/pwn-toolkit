@@ -3,7 +3,7 @@
 
 
 import os
-from pwn import u32, u64, tube, process, remote
+from pwn import u32, u64, process, remote
 from pwnutils.lib.logger import plog
 
 
@@ -22,14 +22,6 @@ pinfo = lambda *args, end=" ": log.info(("%s" % end).join([str(x) for x in args]
 psucc = lambda *args, end=" ": log.success(("%s" % end).join([str(x) for x in args]))
 """
 
-tube.s = tube.send
-tube.sa = tube.sendafter
-tube.sl = tube.sendline
-tube.sla = tube.sendlineafter
-tube.r = tube.recv
-tube.rl = tube.recvline
-tube.ru = tube.recvuntil
-tube.ia = tube.interactive
 
 uu32 = lambda data: u32(data.ljust(4, b"\x00"))
 uu64 = lambda data: u64(data.ljust(8, b"\x00"))

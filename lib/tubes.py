@@ -79,3 +79,14 @@ class websocket(tube):
 
         self.closed = True
         self.sock.shutdown()
+
+
+# add tube alias
+tube.s = tube.send
+tube.sa = tube.sendafter
+tube.sl = tube.sendline
+tube.sla = tube.sendlineafter
+tube.r = tube.recv
+tube.rl = tube.recvline
+tube.ru = tube.recvuntil
+tube.ia = tube.interactive
