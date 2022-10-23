@@ -17,7 +17,6 @@ def try_import(path, name):
         print(f"cannot import lib.{name}, exception: {e}.")
 
 
-try_import(".", "crypt")
 try_import(".", "database")
 try_import(".", "emu")
 try_import(".", "encode")
