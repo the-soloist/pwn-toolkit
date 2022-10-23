@@ -28,6 +28,7 @@ import math
 
 __version__ = (1, 0, 3)
 
+
 def base92_chr(val):
     '''
     Map an integer value <91 to a char
@@ -55,6 +56,7 @@ def base92_chr(val):
         return chr(ord('#') + val - 1)
     else:
         return chr(ord('a') + val - 62)
+
 
 def base92_ord(val):
     '''
@@ -84,6 +86,7 @@ def base92_ord(val):
         return num - ord('a') + 62
     else:
         raise ValueError('val is not a base92 character')
+
 
 def base92_encode(bytstr):
     '''
@@ -128,13 +131,14 @@ def base92_encode(bytstr):
     if bitstr:
         if len(bitstr) < 7:
             bitstr += '0' * (6 - len(bitstr))
-            resstr += base92_chr(int(bitstr,2))
+            resstr += base92_chr(int(bitstr, 2))
         else:
             bitstr += '0' * (13 - len(bitstr))
             i = int(bitstr, 2)
             resstr += base92_chr(i // 91)
             resstr += base92_chr(i % 91)
     return resstr
+
 
 def base92_decode(bstr):
     '''
@@ -160,8 +164,8 @@ def base92_decode(bstr):
     if bstr == '~':
         return ''
     # we always have pairs of characters
-    for i in range(len(bstr)//2):
-        x = base92_ord(bstr[2*i])*91 + base92_ord(bstr[2*i+1])
+    for i in range(len(bstr) // 2):
+        x = base92_ord(bstr[2 * i]) * 91 + base92_ord(bstr[2 * i + 1])
         bitstr += '{:013b}'.format(x)
         while 8 <= len(bitstr):
             resstr += chr(int(bitstr[0:8], 2))
@@ -175,6 +179,7 @@ def base92_decode(bstr):
             bitstr = bitstr[8:]
     return resstr
 
+
 encode = base92_encode
 b92encode = base92_encode
 
@@ -185,17 +190,18 @@ if __name__ == "__main__":
     import doctest
     doctest.testmod()
 
-    ## more correctness tests
+    # more correctness tests
     import hashlib
     import random
+
     def gen_bytes(s):
-        return hashlib.sha512(s).digest()[:random.randint(1,64)]
+        return hashlib.sha512(s).digest()[:random.randint(1, 64)]
     for i in range(10000):
         s = gen_bytes(str(random.random()))
         assert s == decode(encode(s))
     print('correctness spot check passed')
 
-    ## size tests
+    # size tests
     # import base64
     # import base85
     # from pprint import pprint
