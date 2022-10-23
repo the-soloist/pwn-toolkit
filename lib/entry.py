@@ -13,12 +13,12 @@ def delete_unexpected_keyword(arg, klist):
             pass
 
 
-def pwnpwnpwn(args, force=None):
+def pppwn(args, force=None):
     assert type(args.cmd) == list
     assert type(args.kwargs) == dict
 
     if force:
-        """ sh = pwnpwnpwn(args, force="remote") """
+        """ sh = pppwn(args, force="remote") """
         log.info(f"set {force} mode")
         setattr(args, force, True)
 
@@ -73,7 +73,7 @@ def pwnpwnpwn(args, force=None):
         or 
         >>> args.cmd = ["./run.sh"]
 
-        >>> sh = pwnpwnpwn(args)
+        >>> sh = pppwn(args)
         """
 
         if args.cmd == list():
@@ -92,7 +92,7 @@ def pwnpwnpwn(args, force=None):
         Run with debug mode:
 
         >>> args.kwargs = {"gdbscript": GDB_SCRIPT, }
-        >>> sh = pwnpwnpwn(args)
+        >>> sh = pppwn(args)
         """
 
         if args.cmd == list():

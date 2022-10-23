@@ -29,7 +29,7 @@ paddr("heap_base", heap_base)
 ### the following code is used for brute-force attack
 for _ in range(0x10):
     try:
-        sh = pwnpwnpwn(args)
+        sh = pppwn(args)
         exploit(sh)
     except Exception as e:
         # logger.log("ALERT", str(e.__class__))

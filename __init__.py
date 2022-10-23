@@ -7,7 +7,7 @@ try:
     from pwnutils import lib
 
     from pwnutils.lib import parser
-    from pwnutils.lib.entry import pwnpwnpwn
+    from pwnutils.lib.entry import pppwn
     from pwnutils.lib.tools import *
 except Exception as e:
     plog.error(e)
@@ -27,7 +27,7 @@ except Exception as e:
 
 
 # alias
-pwn_the_world = pwnpwnpwn
+pwn_the_world = pppwn
 
 
 # init
