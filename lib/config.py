@@ -13,7 +13,7 @@ def init_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     # parser.add_argument("-a", "--argument", action="store")  # for test
 
-    # init group
+    # init mutually exclusive group
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("-d", "--debug", action="store_true")
     group.add_argument("-l", "--local", action="store_true")
