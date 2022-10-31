@@ -37,10 +37,12 @@ class PwnTube(tube):
 
         # pass remote mode
         if hasattr(self, "process_mode"):
-            if self.process_mode != "local":
+            if self.process_mode in ["remote", "websocket"]:
                 # TODO add support for remote debug
-                log.warning(f"not support remote debug, for now.")
-                # pause()
+                log.warning(f"not support remote debug")
+                return
+            elif self.process_mode == "debug":
+                log.warning(f"duplicate debug process")
                 return
 
         script_lines = list()
