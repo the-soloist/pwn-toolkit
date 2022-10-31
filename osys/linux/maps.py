@@ -26,8 +26,8 @@ def get_base(libs=None, elf=None, sh=None):
         # text_base = libs[str(sh.argv[0].strip("."))]
     """
 
-    if (not libs and not elf) or (not sh):
-        log.warn("get_base: set sh / libs and elf")
+    # if (not libs and not elf) or (not sh):
+    #     log.warn("get_base: set sh / libs and elf")
 
     if elf is None:
         return get_sh_base(sh)

@@ -1,5 +1,8 @@
 from . import elf
 from . import heap
+from . import maps
+from . import mem
+from . import process
 from . import rop
 
 
