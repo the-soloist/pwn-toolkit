@@ -14,16 +14,15 @@ python 3.10.x
 ```sh
 # 安装依赖
 pip3 install -r requirements.txt
-pip3 install pwntools==4.3.1 --user
-pip3 install pybase62 psutil prettytable termcolor tabulate pycryptodome websocket-client
+# pip3 install pwntools==4.3.1
+pip3 install pybase62 prettytable termcolor tabulate pycryptodome websocket-client
 
 git clone https://github.com/thenoviceoof/base92 pkg/base92
 git clone https://github.com/stek29/base100 pkg/base100
 
 # 导入模块
-PWNUTILS_DIR="/path/to/pwnutils"
-git clone https://github.com/the-soloist/pwn-utils $PWNUTILS_DIR
-export PYTHONPATH="$PYTHONPATH:$PWNUTILS_DIR"
+git clone https://github.com/the-soloist/pwn-utils pwnutils
+export PYTHONPATH="$PYTHONPATH:/path/to/pwnutils"
 
 # 或者 python 中加入
 sys.path.append("/path/to/pwnutils")
