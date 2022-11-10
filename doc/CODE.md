@@ -68,6 +68,6 @@ p.recvuntil(b"prefix: ")
 prefix = p.recvuntil(b"\n", drop=True).decode()
 p.recvuntil(b"target: ")
 target = p.recvuntil(b"\n", drop=True).decode()
-res = crack_hash("sha256", target, prefix=prefix, strings=printable, length=3)
+res = do_hash_pow("sha256", target, prefix=prefix, strings=printable, length=3)
 p.sendlineafter("input: ", res)
 ```

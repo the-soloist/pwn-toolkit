@@ -17,7 +17,7 @@ def gen_strings_series(s, n=4, r=False):
             yield "".join(random.sample(s, n))
 
 
-def crack_hash(mode: str, target: str, prefix="", suffix="", strings=ascii_letters + digits, length=4, random=False):
+def do_hash_pow(mode: str, target: str, prefix="", suffix="", strings=ascii_letters + digits, length=4, random=False):
     """
     @param mode: 哈希函数
     @param target: 目标哈希值
@@ -26,6 +26,10 @@ def crack_hash(mode: str, target: str, prefix="", suffix="", strings=ascii_lette
     @param strings: 字符集，默认为大小写字母+数字
     @param length: 爆破长度
     @param random: 随机字典
+
+    usage:
+        >>> mode, unknown, salt, target = (x for x in re.split(b"[\(\)+= \n]", p.ru("\n")) if x)
+        >>> res = do_hash_pow(mode.decode(), target.decode(), suffix=salt.decode())
     """
 
     from pwnutils.lib.logger import plog
@@ -43,6 +47,7 @@ def crack_hash(mode: str, target: str, prefix="", suffix="", strings=ascii_lette
         hash_func = hashlib.__get_builtin_constructor(mode)()
         hash_func.update(plain_text.encode())
         hash_res = hash_func.hexdigest()
+
         if hash_res == target:
             plog.success(f"found {mode}({plain_text}) == {target}")
             return i
