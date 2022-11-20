@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from websocket import WebSocket, ABNF, WebSocketException, WebSocketTimeoutException
+from pwn import u64
 from pwnlib.tubes.tube import tube
+from pwnutils.lib.logger import plog
 
 
 class websocket(tube):
@@ -80,6 +82,32 @@ class websocket(tube):
         self.closed = True
         self.sock.shutdown()
 
+
+class PwnTube(tube):
+    def recv_address(self, address_type, delims=None, off=6, timeout=1, verbose=True, **kwargs):
+        if not delims:
+            if address_type == "heap":
+                delims = [b"\x55", b"\x56"]
+            if address_type == "libc":
+                delims = b"\x7f"
+            if address_type == "stack":
+                delims = [b"\x7f\xfd", b"\x7f\xfe", b"\x7f\xff"]
+
+        res = self.recvuntil(delims, timeout=timeout, **kwargs)
+
+        if res:
+            addr = u64(res[-off:].ljust(8, b"\x00"))
+        else:
+            addr = None
+
+        if verbose:
+            plog.success(f"found {address_type} address -> {hex(addr)}")
+
+        return addr
+
+
+# add new tube function
+tube.recv_address = PwnTube.recv_address
 
 # add tube alias
 tube.s = tube.send
