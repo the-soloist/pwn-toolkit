@@ -4,7 +4,14 @@
 from websocket import WebSocket, ABNF, WebSocketException, WebSocketTimeoutException
 from pwn import u64
 from pwnlib.tubes.tube import tube
+from pwnutils.lib.debug import tube_debug
 from pwnutils.lib.logger import plog
+
+
+__all__ = [
+    "websocket",
+    "recv_address",
+]
 
 
 class websocket(tube):
@@ -83,31 +90,31 @@ class websocket(tube):
         self.sock.shutdown()
 
 
-class PwnTube(tube):
-    def recv_address(self, address_type, delims=None, off=6, timeout=1, verbose=True, **kwargs):
-        if not delims:
-            if address_type == "heap":
-                delims = [b"\x55", b"\x56"]
-            if address_type == "libc":
-                delims = b"\x7f"
-            if address_type == "stack":
-                delims = [b"\x7f\xfd", b"\x7f\xfe", b"\x7f\xff"]
+def recv_address(_tube: tube, address_type=None, delims=None, off=6, verbose=True, **kwargs):
+    if not delims:
+        if address_type == "heap":
+            delims = [b"\x55", b"\x56"]
+        elif address_type == "libc":
+            delims = [b"\x7f"]
+        elif address_type == "stack":
+            delims = [b"\x7f\xfd", b"\x7f\xfe", b"\x7f\xff"]
 
-        res = self.recvuntil(delims, timeout=timeout, **kwargs)
+    res = _tube.recvuntil(delims, **kwargs)
 
-        if res:
-            addr = u64(res[-off:].ljust(8, b"\x00"))
-        else:
-            addr = None
+    if res:
+        addr = u64(res[-off:].ljust(8, b"\x00"))
+    else:
+        addr = None
 
-        if verbose:
-            plog.success(f"found {address_type} address -> {hex(addr)}")
+    if verbose and address_type:
+        plog.success(f"found {address_type} address -> {hex(addr)}")
 
-        return addr
+    return addr
 
 
 # add new tube function
-tube.recv_address = PwnTube.recv_address
+tube.proc_debug = tube.dbg = tube_debug
+tube.recv_address = recv_address
 
 # add tube alias
 tube.s = tube.send
