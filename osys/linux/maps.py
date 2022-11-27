@@ -3,7 +3,7 @@
 
 from psutil._common import bytes2human
 from psutil._compat import get_terminal_size
-from pwn import gdb, log
+from pwn import gdb, log, process
 import psutil
 import sys
 
@@ -30,7 +30,7 @@ def get_base(libs=None, elf=None, sh=None):
     #     log.warn("get_base: set sh / libs and elf")
 
     if elf is None:
-        return get_sh_base(sh)
+        return get_text_base(sh)
 
     try:
         _text_base = libs[elf.path]
@@ -44,7 +44,7 @@ def get_base(libs=None, elf=None, sh=None):
             return _text_base, libs[key]
 
 
-def get_sh_base(sh):
+def get_text_base(sh: process):
     libs = sh.libs()
 
     if sys.version_info.major >= 3:
@@ -62,7 +62,11 @@ def get_core_maps(sh):
     return sh.corefile.mappings
 
 
-def get_heap_map(sh):
+def get_vmmap(sh: process):
+    pass
+
+
+def get_heap_map(sh: process):
     p = psutil.Process(sh.pid)
     templ = "%-20s %10s  %-7s %s"
     M = p.memory_maps(grouped=False)
@@ -76,7 +80,7 @@ def get_heap_map(sh):
     return None
 
 
-def print_all_map(sh):
+def print_all_map(sh: process):
     p = psutil.Process(sh.pid)
     templ = "%-20s %10s  %-7s %s"
     print(templ % ("Address", "RSS", "Mode", "Mapping"))
