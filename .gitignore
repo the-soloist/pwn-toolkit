@@ -400,5 +400,7 @@ $RECYCLE.BIN/
 **/.clang-format
 **/.nvimlog
 
-/awd/
-/backup/
+awd/
+backup/
+scripts/
+test/
