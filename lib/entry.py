@@ -4,6 +4,10 @@
 import os
 from pwn import process, remote, gdb, log, pause, context
 
+__all__ = [
+    "pppwn"
+]
+
 
 def delete_unexpected_keyword(arg, klist):
     for k in klist:
