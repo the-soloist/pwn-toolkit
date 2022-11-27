@@ -6,6 +6,7 @@ from . import crypto
 from . import debug
 from . import entry
 from . import logger
+from . import rop
 from . import tools
 from . import tubes
 
@@ -21,7 +22,6 @@ try_import(".", "database")
 try_import(".", "emu")
 try_import(".", "encode")
 try_import(".", "http")
-try_import(".", "shellcode")
 
 
 parser = config.init_parser()
