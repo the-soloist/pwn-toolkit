@@ -1,6 +1,6 @@
 # pwnutils
 
-封装一些常用的功能 \_(:з」∠)\_
+自用的一个做 pwn 题的 python 库，封装一些常用的函数。
 
 ## ENV
 
@@ -34,9 +34,10 @@ export PATH="$PATH:/path/to/pwnutils/bin"
 ## USAGE
 
 ```python
-from pwn import *
 from pwnutils import *
 ```
+
+使用文档：[doc](doc) （未完成）
 
 # REFERENCE
 
