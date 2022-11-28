@@ -9,6 +9,11 @@ from pathlib import Path
 from pwnutils.lib.config import PT_PATH
 
 
+__all__ = [
+    "logger"
+]
+
+
 log_dir = json.load(open(PT_PATH / "conf/setting.json"))["log"]["save_dir"]
 log_path = Path(log_dir) / "pt.log"
 
