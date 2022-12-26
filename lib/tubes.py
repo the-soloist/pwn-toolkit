@@ -10,8 +10,15 @@ from pwnutils.lib.logger import plog
 
 __all__ = [
     "websocket",
-    "recv_address",
+    "recv_pointer",
 ]
+
+
+default_delims = {
+    "heap": [b"\x55", b"\x56"],
+    "libc": [b"\x7f"],
+    "stack": [b"\x7f\xfd", b"\x7f\xfe", b"\x7f\xff"],
+}
 
 
 class websocket(tube):
@@ -90,31 +97,25 @@ class websocket(tube):
         self.sock.shutdown()
 
 
-def recv_address(_tube: tube, address_type=None, delims=None, off=6, verbose=True, **kwargs):
+def recv_pointer(_tube: tube, name=None, delims=None, off=6, **kwargs):
     if not delims:
-        if address_type == "heap":
-            delims = [b"\x55", b"\x56"]
-        elif address_type == "libc":
-            delims = [b"\x7f"]
-        elif address_type == "stack":
-            delims = [b"\x7f\xfd", b"\x7f\xfe", b"\x7f\xff"]
+        delims = default_delims["name"]
 
     res = _tube.recvuntil(delims, **kwargs)
 
     if res:
         addr = u64(res[-off:].ljust(8, b"\x00"))
+        plog.debug(f"found pointer: {name} -> {hex(addr)}")
     else:
         addr = None
-
-    if verbose and address_type:
-        plog.success(f"found {address_type} address -> {hex(addr)}")
+        plog.warning(f"{name} pointer not found")
 
     return addr
 
 
 # add new tube function
 tube.proc_debug = tube.dbg = tube_debug
-tube.recv_address = recv_address
+tube.recv_pointer = recv_pointer
 
 # add tube alias
 tube.s = tube.send
