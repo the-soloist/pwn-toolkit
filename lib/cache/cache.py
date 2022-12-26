@@ -4,10 +4,10 @@
 import json
 from hashlib import md5
 from pathlib import Path
-from pwnutils.lib.config import PT_PATH
+from pwnutils.lib.config import SETTING
 
 
-CACHE_DIR = Path(json.load(open(PT_PATH / "conf/setting.json"))["cache"]["save_dir"])
+CACHE_DIR = Path(SETTING["cache"]["dir"])
 
 if not CACHE_DIR.is_dir():
     CACHE_DIR.mkdir(parents=True, exist_ok=True)

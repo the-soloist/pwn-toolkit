@@ -6,7 +6,7 @@ import json
 import sys
 from loguru import logger
 from pathlib import Path
-from pwnutils.lib.config import PT_PATH
+from pwnutils.lib.config import SETTING
 
 
 __all__ = [
@@ -14,12 +14,13 @@ __all__ = [
 ]
 
 
-log_dir = json.load(open(PT_PATH / "conf/setting.json"))["log"]["save_dir"]
-log_path = Path(log_dir) / "pt.log"
+log_dir = Path(SETTING["log"]["dir"])
+log_path = log_dir / "pwn-utils.log"
 
 if not log_path.is_file():
     log_path.parent.mkdir(parents=True, exist_ok=True)
     log_path.touch()
+
 
 # 终端日志输出格式
 stdout_fmt = (
