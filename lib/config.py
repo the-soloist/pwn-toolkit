@@ -2,15 +2,20 @@
 # -*- coding: utf-8 -*-
 
 import argparse
+import configparser
 from pathlib import Path
 
 
 __all__ = [
-    "PT_PATH",
+    "PU_HOME",
+    "SETTING",
     "init_parser",
 ]
 
-PT_PATH = Path(__file__).parent.parent
+
+PU_HOME = Path(__file__).parent.parent
+SETTING = configparser.ConfigParser()
+SETTING.read(PU_HOME / "setting.ini")
 
 
 def init_parser() -> argparse.ArgumentParser:
@@ -25,9 +30,12 @@ def init_parser() -> argparse.ArgumentParser:
     group.add_argument("-r", "--remote", action="store_true")
     group.add_argument("-w", "--websocket", action="store_true")
 
+    # init default parser
+    parser.add_argument("-v", "--verbose", action="count", help="print verbose output")
+
     # init awd sub parser
-    subparsers = parser.add_subparsers(help='sub command')
-    awd_parsers = subparsers.add_parser('awd', help='awd help')
-    awd_parsers.add_argument('-tl', "--target_list", action="store", default=None, help='add target list')
+    subparsers = parser.add_subparsers(help="sub command")
+    awd_parsers = subparsers.add_parser("awd", help="awd help")
+    awd_parsers.add_argument("-tl", "--target_list", action="store", default=None, help="add target list")
 
     return parser

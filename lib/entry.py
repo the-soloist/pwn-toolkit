@@ -33,6 +33,13 @@ def pppwn(args, force=None):
             context.terminal = ["tmux", "sp", "-h", "-l", str(split_horizon)]
             log.info(f"set `context.terminal = {str(context.terminal)}`")
 
+    # set log level
+    if not args.verbose:
+        if args.verbose == 1:
+            context.log_level = "debug"
+        else:
+            log.setLevel(0)
+
     if args.remote:
         host, port = args.target
         sh = remote(host, port)
