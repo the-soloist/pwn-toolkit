@@ -9,7 +9,6 @@ from pwnutils import lib
 from pwnutils.lib import parser
 from pwnutils.lib.entry import pppwn
 from pwnutils.lib.logger import plog, tlog
-from pwnutils.lib.rop import *
 from pwnutils.lib.tubes import *
 
 from pwnutils import osys

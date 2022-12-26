@@ -6,7 +6,6 @@ from . import crypto
 from . import debug
 from . import entry
 from . import logger
-from . import rop
 from . import tubes
 
 
