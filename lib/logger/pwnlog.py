@@ -4,21 +4,57 @@
 import logging
 from pwn import log
 from pwnlib.exception import PwnlibException
+from pwnlib.log import console, Formatter
 from pwnlib.log import Logger
-from pwnutils.lib.color import *
+from pwnlib.term import text
+from pwnutils.lib import color
 from tqdm import tqdm
 
-
 __all__ = [
-    "info", "success", "warn", "error",
-    "PwnLogger", "TqdmLogger"
+    "PwnLogger",
+    "TqdmLogger"
 ]
 
+_msgtype_prefixes = {
+    "status": [text.magenta, "x"],
+    "success": [text.bold_green, "+"],
+    "failure": [text.bold_red, "-"],
+    "debug": [text.bold_red, "DEBUG"],
+    "info": [text.bold_blue, "*"],
+    "warning": [text.bold_yellow, "!"],
+    "error": [text.on_red, "ERROR"],
+    "exception": [text.on_red, "ERROR"],
+    "critical": [text.on_red, "CRITICAL"],
+    "info_once": [text.bold_blue, "*"],
+    "warning_once": [text.bold_yellow, "!"],
+    "address": [text.magenta, f"{color.Fore.LIGHTMAGENTA_EX}ADDR"],
+    "value": [text.cyan, f"{color.Fore.LIGHTCYAN_EX}VALUE"],
+    "message": [text.white, f"{color.Fore.LIGHTWHITE_EX}MSG"],
+}
 
-info = f"[{prefix_info}*{end}] "
-success = f"[{prefix_success}+{end}] "
-warn = f"[{prefix_warn}!{end}] "
-error = f"[{prefix_error}ERROR{end}] "
+
+class LogFormatter(Formatter):
+    def format(self, record):
+        msg = super(Formatter, self).format(record)
+
+        msgtype = getattr(record, "pwnlib_msgtype", None)
+
+        if msgtype is None:
+            return msg
+
+        if msgtype in _msgtype_prefixes:
+            style, symb = _msgtype_prefixes[msgtype]
+            prefix = "[%s] " % style(symb)
+        elif msgtype == "indented":
+            prefix = self.indent
+        elif msgtype == "animated":
+            prefix = ""
+        else:
+            prefix = "[?] "
+
+        msg = prefix + msg
+        msg = self.nlindent.join(msg.splitlines())
+        return msg
 
 
 class PwnLogger(Logger):
@@ -26,40 +62,31 @@ class PwnLogger(Logger):
         logger = logging.getLogger("pwnlib.pwnutils")
         self._logger = logger
 
-        self._save = {"info": self.info,
-                      "success": self.success,
-                      "warn": self.warn,
-                      "error": self.error,
-                      "address": self.address}
-
-        self._write = TqdmLogger._write
-
-    def address(self, __msg_log_level="success", **kwargs):
+    def address(self, **kwargs):
         for k, v in kwargs.items():
-            self._log(logging.INFO, f"{k} -> {hex(v)}", (), {}, __msg_log_level)
+            self._log(logging.INFO, f"{k} -> {hex(v)}", (), {}, "address")
 
-    def value(self, __msg_log_level="success", **kwargs):
+    def value(self, _print_hex=True, **kwargs):
         for k, v in kwargs.items():
-            self._log(logging.INFO, f"{k}={v}", (), {}, __msg_log_level)
+            self._log(logging.INFO, f"{k} = {hex(v) if _print_hex else v}", (), {}, "value")
 
-    def msg(self, __msg_log_level="info", **kwargs):
-        for k, v in kwargs.items():
-            self._log(logging.INFO, f"{k}: {v}", (), {}, __msg_log_level)
+    def message(self, name, msg):
+        self._log(logging.INFO, f"{name}: {msg}", (), {}, "message")
 
-    def _write(self, msg):
-        pass
-
-    def switch_tqdm(self):
-        for fname in self._save.keys():
-            fbody = getattr(TqdmLogger, fname)
-            setattr(self, fname, fbody)
-
-    def quit_tqdm(self):
-        for fname, fbody in self._save.items():
-            setattr(self, fname, fbody)
+    def msg(self, name, msg):
+        self.message(name, msg)
 
 
 class TqdmLogger(object):
+    text_info = f"[{color.prefix_info}*{color.end}] "
+    text_success = f"[{color.prefix_success}+{color.end}] "
+    text_warning = f"[{color.prefix_warn}!{color.end}] "
+    text_error = f"[{color.prefix_error}ERROR{color.end}] "
+
+    text_address = f"[{color.Fore.LIGHTMAGENTA_EX}ADDR{color.end}] "
+    text_value = f"[{color.Fore.LIGHTCYAN_EX}VALUE{color.end}] "
+    text_message = f"[{color.Fore.LIGHTWHITE_EX}MSG{color.end}] "
+
     def _write(self, msg):
         try:
             tqdm.write(msg)
@@ -67,30 +94,68 @@ class TqdmLogger(object):
             self.error(str(e))
 
     def _log(self, msg, msgtype):
-        print_log = getattr(self, msgtype)
-        print_log(msg)
+        prefix = getattr(self, f"text_{msgtype}")
+        self._write(f"{prefix}{msg}{color.end}")
 
     def info(self, msg):
-        self._write(f"{info}{msg}{end}")
+        self._log(msg, "info")
 
     def success(self, msg):
-        self._write(f"{success}{msg}{end}")
+        self._log(msg, "success")
+
+    def warning(self, msg):
+        self._log(msg, "warning")
 
     def warn(self, msg):
-        self._write(f"{warn}{msg}{end}")
+        self.warning(msg)
 
     def error(self, msg):
-        self._write(f"{error}{msg}{end}")
+        self._log(msg, "error")
         raise PwnlibException(msg)
 
-    def address(self, __msg_log_level="success", **kwargs):
+    def address(self, **kwargs):
         for k, v in kwargs.items():
-            self._log(f"{k} -> {hex(v)}", __msg_log_level)
+            self._log(f"{k} -> {hex(v)}", "address")
 
-    def value(self, __msg_log_level="success", **kwargs):
+    def value(self, _print_hex=True, **kwargs):
         for k, v in kwargs.items():
-            self._log(f"{k}={v}", __msg_log_level)
+            self._log(f"{k} = {hex(v) if _print_hex else v}", "value")
 
-    def msg(self, __msg_log_level="info", **kwargs):
-        for k, v in kwargs.items():
-            self._log(f"{k}: {v}", __msg_log_level)
+    def message(self, name, msg):
+        self._log(f"{name}: {msg}", "message")
+
+    def msg(self, name, msg):
+        self.message(name, msg)
+
+
+console.setFormatter(LogFormatter())
+
+
+if __name__ == "__main__":
+    # import ipdb
+    # ipdb.set_trace()
+
+    plog = PwnLogger()
+
+    plog.address(test=0xdeadbeef)
+    plog.value(test=0xdeadbeef)
+    plog.value(False, test=0xdeadbeef)
+    plog.msg("test", "message")
+
+    plog.info("test")
+    plog.warn("test")
+    plog.success("test")
+    plog.waitfor("test")
+    # plog.error("test")
+
+    tlog = TqdmLogger()
+
+    tlog.address(test=0xdeadbeef)
+    tlog.value(test=0xdeadbeef)
+    tlog.value(False, test=0xdeadbeef)
+    tlog.msg("test", "test message")
+
+    tlog.info("test")
+    tlog.warn("test")
+    tlog.success("test")
+    # tlog.error("test")

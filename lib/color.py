@@ -33,13 +33,15 @@ white = Style.BRIGHT + Fore.WHITE
 green = Style.BRIGHT + Fore.GREEN
 blue = Style.BRIGHT + Fore.BLUE
 red = Style.BRIGHT + Fore.RED
+magenta = Style.BRIGHT + Fore.MAGENTA
+cyan = Style.BRIGHT + Fore.CYAN
 end = Style.RESET_ALL
 
 # default log conf
 prefix_info = Style.BRIGHT + Fore.BLUE
 prefix_success = Style.BRIGHT + Fore.GREEN
 prefix_warn = Style.BRIGHT + Fore.YELLOW
-prefix_error = Style.BRIGHT + Fore.WHITE + Back.RED
+prefix_error = Style.NORMAL + Fore.WHITE + Back.RED
 
 
 if __name__ == "__main__":

@@ -34,7 +34,7 @@ def pppwn(args, force=None):
             log.info(f"set `context.terminal = {str(context.terminal)}`")
 
     # set log level
-    if not args.verbose:
+    if args.verbose:
         if args.verbose == 1:
             context.log_level = "debug"
         else:
