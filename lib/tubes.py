@@ -17,7 +17,7 @@ __all__ = [
 default_delims = {
     "heap": [b"\x55", b"\x56"],
     "libc": [b"\x7f"],
-    "stack": [b"\x7f\xfd", b"\x7f\xfe", b"\x7f\xff"],
+    "stack": [b"\xfd\x7f", b"\xfe\x7f", b"\xff\x7f"],
 }
 
 
@@ -97,25 +97,25 @@ class websocket(tube):
         self.sock.shutdown()
 
 
-def recv_pointer(_tube: tube, name=None, delims=None, off=6, **kwargs):
+def recv_pointer(_tube: tube, delims=None, off=6, name=None, **kwargs):
     if not delims:
-        delims = default_delims["name"]
+        delims = default_delims[name]
 
     res = _tube.recvuntil(delims, **kwargs)
 
     if res:
         addr = u64(res[-off:].ljust(8, b"\x00"))
-        plog.debug(f"found pointer: {name} -> {hex(addr)}")
+        plog.debug(f"found pointer: {hex(addr)}")
     else:
         addr = None
-        plog.warning(f"{name} pointer not found")
+        plog.warning(f"no pointers with the prefix {delims} found")
 
     return addr
 
 
 # add new tube function
 tube.proc_debug = tube.dbg = tube_debug
-tube.recv_pointer = recv_pointer
+tube.recv_pointer = tube.rp = recv_pointer
 
 # add tube alias
 tube.s = tube.send
@@ -125,4 +125,9 @@ tube.sla = tube.sendlineafter
 tube.r = tube.recv
 tube.rl = tube.recvline
 tube.ru = tube.recvuntil
-tube.ia = tube.interactive
+
+
+if __name__ == "__main__":
+    t = tube()
+    t.recv_raw = lambda n: b"\x01\x02\x03\x04\x05\x06\xff\x7f\x56\xaa\xaaFoo\nBar\nBaz\nKaboodle\n"
+    r.rp([b"\x7f"])
