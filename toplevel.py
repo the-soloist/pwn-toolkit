@@ -5,6 +5,7 @@ from pwn import *
 
 import pwnutils as pu
 
+from pwnutils import awd
 from pwnutils import lib
 from pwnutils.lib import parser
 from pwnutils.lib.entry import pppwn
