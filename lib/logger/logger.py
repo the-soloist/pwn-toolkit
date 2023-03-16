@@ -7,6 +7,7 @@ import sys
 from loguru import logger
 from pathlib import Path
 from pwnutils.lib.config import SETTING
+from pwnutils.lib.core.fs import touch_s
 
 
 __all__ = [
@@ -16,10 +17,7 @@ __all__ = [
 
 log_dir = Path(SETTING["log"]["dir"])
 log_path = log_dir / "pwn-utils.log"
-
-if not log_path.is_file():
-    log_path.parent.mkdir(parents=True, exist_ok=True)
-    log_path.touch()
+touch_s(log_path)
 
 
 # 终端日志输出格式

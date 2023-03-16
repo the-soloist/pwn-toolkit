@@ -7,13 +7,15 @@ from pwnlib.exception import PwnlibException
 from pwnlib.log import console, Formatter
 from pwnlib.log import Logger
 from pwnlib.term import text
-from pwnutils.lib import color
+from pwnutils.lib.core import color
 from tqdm import tqdm
+
 
 __all__ = [
     "PwnLogger",
     "TqdmLogger"
 ]
+
 
 _msgtype_prefixes = {
     "status": [text.magenta, "x"],
