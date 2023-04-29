@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from . import handler
 from . import pwnlog
 from .logger import logger
@@ -8,4 +11,4 @@ plog = PwnLogger()
 tlog = TqdmLogger()
 
 
-__all__ = [x for x in globals().keys() if x != '__name__']
+__all__ = [x for x in globals().keys() if x != "__name__"]

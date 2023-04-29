@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from . import elf
 from . import glibc
 from . import ropbox
@@ -7,4 +10,4 @@ from . import process
 from . import scbox
 
 
-__all__ = [x for x in globals().keys() if x != '__name__']
+__all__ = [x for x in globals().keys() if x != "__name__"]
