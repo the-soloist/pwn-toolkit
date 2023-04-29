@@ -6,11 +6,11 @@ from pwn import log, context
 
 
 __all__ = [
-    "force_log_level"
+    "log_level"
 ]
 
 
-def force_log_level(level=None):
+def log_level(level=None):
     def dector(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
