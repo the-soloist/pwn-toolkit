@@ -4,7 +4,19 @@
 import hashlib
 import itertools
 import random
-from string import ascii_letters, digits, punctuation
+import string
+from pwnlib.util.iters import bruteforce, mbruteforce
+from pwnutils.lib.logger import plog
+
+
+__all__ = [
+    "gen_strings_series",
+    "do_hash_pow",
+    "do_hash_pow_m",
+]
+
+
+default_string_table = string.ascii_letters + string.digits
 
 
 def gen_strings_series(s, n=4, r=False):
@@ -17,40 +29,70 @@ def gen_strings_series(s, n=4, r=False):
             yield "".join(random.sample(s, n))
 
 
-def do_hash_pow(mode: str, target: str, prefix="", suffix="", strings=ascii_letters + digits, length=4, random=False):
+def do_hash_pow(mode: str, target: str, prefixes="", suffixes="", strings=default_string_table, length=4, random=False):
     """
-    @param mode: 哈希函数
-    @param target: 目标哈希值
-    @param prefix: 前缀
-    @param suffix: 后缀
-    @param strings: 字符集，默认为大小写字母+数字
-    @param length: 爆破长度
-    @param random: 随机字典
+    Arguments:
+      mode: 哈希函数
+      target: 目标哈希值
+      prefixes: 前缀
+      suffixes: 后缀
+      strings: 字符集，默认为大小写字母+数字
+      length: 未知内容长度
+      random: 字典顺序随机生成
 
-    usage:
-        >>> mode, unknown, salt, target = (x for x in re.split(b"[\(\)+= \n]", p.ru("\n")) if x)
-        >>> res = do_hash_pow(mode.decode(), target.decode(), suffix=salt.decode())
+    Returns:
+      目标字符串（不含 salt 部分）
+
+    Example:
+      >>> mode, unknown, salt, target = (x.decode() for x in re.split(b"[\(\)+= \n]", p.ru(b"\n")) if x)
+      >>> res = do_hash_pow(mode, target, suffixes=salt)
     """
 
-    from pwnutils.lib.logger import plog
-
-    if not prefix and not suffix:
-        plog.error("Please set prefix or suffix.")
-
+    assert not prefixes and not suffixes
     assert mode in dir(hashlib)
 
-    plog.waitfor(f"cracking: {mode}({' + '.join([x for x in [prefix, '?' * length, suffix] if x])}) == {target}")
+    plog.waitfor(f"cracking: {mode}({' + '.join([x for x in [prefixes, '?' * length, suffixes] if x])}) == {target}")
 
     for i in gen_strings_series(strings, length, random):
-        plain_text = prefix + i + suffix
-        # print(f"test: {plain_text}")
-        hash_func = hashlib.__get_builtin_constructor(mode)()
-        hash_func.update(plain_text.encode())
-        hash_res = hash_func.hexdigest()
-
-        if hash_res == target:
-            plog.success(f"found {mode}({plain_text}) == {target}")
+        content = prefixes + i + suffixes
+        # print(f"test: {content}")
+        obj = hashlib.__get_builtin_constructor(mode)()
+        obj.update(content.encode())
+        if obj.hexdigest() == target:
+            plog.success(f"found {mode}({content}) == {target}")
             return i
 
     plog.failure("not found")
     return None
+
+
+def do_hash_pow_m(mode: str, target: str, prefixes="", suffixes="", strings=default_string_table, strmethod="upto", length=6, thread=16):
+    """
+    Arguments:
+      mode: 哈希函数
+      target: 目标哈希值
+      prefixes: 前缀
+      suffixes: 后缀
+      strings: 字符集，默认为大小写字母+数字
+      strmethod: 同 mbruteforce 的 method 参数
+      length: 字符串长度
+      thread: 线程数
+
+    Example:
+      >>> mode, unknown, salt, target = (x.decode() for x in re.split(b"[\(\)+= \n]", p.ru(b"\n")) if x)
+      >>> res = do_hash_pow_m(mode, target, suffixes=salt)
+    """
+
+    assert not prefixes and not suffixes
+    assert mode in dir(hashlib)
+
+    def brute(cur):
+        content = prefixes + str(cur) + suffixes
+        obj = hashlib.__get_builtin_constructor(mode)()
+        obj.update(content.encode())
+        if obj.hexdigest() == target:
+            return True
+        return False
+
+    res = mbruteforce(brute, strings, method=strmethod, length=length, threads=thread)
+    return res
