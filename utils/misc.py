@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import os
-from pwn import u32, u64, process, remote
+from pwn import u8, u16, u32, u64, process, remote
 
 
 __all__ = [
-    "uu32", "uu64",
+    "uu8", "uu16", "uu32", "uu64",
     "dump_remote_binary",
     "get_salt",
     "compile_symbol_file"
@@ -28,7 +28,8 @@ pinfo = lambda *args, end=" ": log.info(("%s" % end).join([str(x) for x in args]
 psucc = lambda *args, end=" ": log.success(("%s" % end).join([str(x) for x in args]))
 """
 
-
+uu8 = u8
+uu16 = lambda data: u16(data.ljust(2, b"\x00"))
 uu32 = lambda data: u32(data.ljust(4, b"\x00"))
 uu64 = lambda data: u64(data.ljust(8, b"\x00"))
 
