@@ -148,7 +148,11 @@ if __name__ == "__main__":
     plog.warn("test")
     plog.success("test")
     plog.waitfor("test")
-    # plog.error("test")
+
+    try:
+        plog.error("test")
+    except:
+        pass
 
     tlog = TqdmLogger()
 
@@ -160,4 +164,8 @@ if __name__ == "__main__":
     tlog.info("test")
     tlog.warn("test")
     tlog.success("test")
-    # tlog.error("test")
+
+    try:
+        tlog.error("test")
+    except:
+        pass
