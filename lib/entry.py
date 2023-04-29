@@ -4,6 +4,7 @@
 import os
 from pwn import process, remote, gdb, log, pause, context
 
+
 __all__ = [
     "pppwn"
 ]
@@ -18,9 +19,6 @@ def delete_unexpected_keyword(arg, klist):
 
 
 def pppwn(args, force=None):
-    assert type(args.cmd) == list
-    assert type(args.kwargs) == dict
-
     if force:
         """ sh = pppwn(args, force="remote") """
         log.info(f"set {force} mode")
@@ -40,81 +38,100 @@ def pppwn(args, force=None):
         else:
             log.setLevel(0)
 
+    # remote mode
     if args.remote:
         host, port = args.target
         sh = remote(host, port)
         sh.process_mode = "remote"
 
+    # websocket mode
     elif args.websocket:
         from pwnutils.lib.tubes import websocket
         sh = websocket(args.target)
         sh.process_mode = "websocket"
 
+    elif args.ssh:
+        from pwn import ssh as SSH
+
+        assert hasattr(args.cli, "cmd")
+        assert hasattr(args.cli, "kwargs")
+        assert isinstance(args.cli.ssh, SSH)
+
+        if isinstance(args.cli.cmd, list):
+            assert len(args.cli.cmd) > 0
+            command = args.cli.cmd
+        else:
+            command = args.binary.path
+
+        sh = args.cli.ssh.process(command, **args.cli.kwargs)
+        sh.process_mode = "ssh"
+
+    # local mode
     elif args.local:
         """ 
         Run with local mode:
 
-        >>> sh = process([ld.path, binary.path], env={"LD_PRELOAD": libc.path})
-        >>> sh = process([f"qemu-{context.arch}", "-g", "9999", "-L", ".", binary.path])
+          >>> sh = process([ld.path, binary.path], env={"LD_PRELOAD": libc.path})
+          >>> sh = process([f"qemu-{context.arch}", "-g", "9999", "-L", ".", binary.path])
 
-        >>> args.cmd = [ld.path, binary.path]
-        >>> args.kwargs = {
-                "env": {"LD_PRELOAD": "/path/to/libc.so"},  # libc.path
-            }
+          >>> args.cli.cmd = [ld.path, binary.path]
+          >>> args.cli.kwargs = { "env": {"LD_PRELOAD": "/path/to/libc.so"}, }
 
-        Run with qemu: 
-        1. add gdb script:
+        Start with qemu: 
+        1. append gdb script:
             ```
-            file {file_path}
-            target remote :9999
-            format(file_path=binary.path, **locals())
+            GDB_SCRIPT += "file /path/to/binary"
+            GDB_SCRIPT += "target remote :9999"
             ```
 
-        2. add to py
+        2. edit py script:
             ```
             from pwnutils.osys.linux.elf.process import kill_process_by_name
             kill_process_by_name("qemu")
             ```
 
-        >>> args.cmd = [
-                f"qemu-{context.arch}", 
-                "-g", "9999", 
-                "-L", ".", binary.path
-            ]
-        or 
-        >>> args.cmd = ["./run.sh"]
+          >>> args.cli.cmd = [f"qemu-{context.arch}", "-g", "9999", "-L", ".", binary.path]
+          >>> args.cli.cmd = ["./run.sh"]
 
-        >>> sh = pppwn(args)
+          >>> cat ./run.sh
+          #!/bin/bash
+          qemu-mips -g 9999 -L . /path/to/binary
         """
 
-        if args.cmd == list():
-            command = args.binary.path
+        assert hasattr(args.cli, "cmd")
+        assert hasattr(args.cli, "kwargs")
+
+        if isinstance(args.cli.cmd, list):
+            assert len(args.cli.cmd) > 0
+            command = args.cli.cmd
         else:
-            command = args.cmd
+            command = args.binary.path
 
-        local_black_list = ["gdbscript"]
-        delete_unexpected_keyword(args.kwargs, local_black_list)
+        delete_unexpected_keyword(args.cli.kwargs, ["gdbscript"])
 
-        sh = process(command, **args.kwargs)
+        sh = process(command, **args.cli.kwargs)
         sh.process_mode = "local"
 
+    # debug mode
     elif args.debug:
         """ 
         Run with debug mode:
 
-        >>> args.kwargs = {"gdbscript": GDB_SCRIPT, }
-        >>> sh = pppwn(args)
+          >>> args.cli.kwargs = {"gdbscript": GDB_SCRIPT, }
         """
 
-        if args.cmd == list():
-            command = args.binary.path
+        assert hasattr(args.cli, "cmd")
+        assert hasattr(args.cli, "kwargs")
+
+        if isinstance(args.cli.cmd, list):
+            assert len(args.cli.cmd) > 0
+            command = args.cli.cmd
         else:
-            command = args.cmd
+            command = args.binary.path
 
-        debug_black_list = ["env"]
-        delete_unexpected_keyword(args.kwargs, debug_black_list)
+        delete_unexpected_keyword(args.cli.kwargs, ["env"])
 
-        sh = gdb.debug(command, **args.kwargs)
+        sh = gdb.debug(command, **args.cli.kwargs)
         sh.process_mode = "debug"
 
     else:

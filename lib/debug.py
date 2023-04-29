@@ -10,17 +10,17 @@ __all__ = [
 ]
 
 
-def tube_debug(_tube: tube, gdbscript="", gds: dict = {}, bpl: list = []):
+def tube_debug(_tube: tube, gdbscript="", gds: dict = {}, bpl: list = [], force=False):
     """
-    @param bpl: break point list
-    @param gds: gdb debug symbols
+    Arguments:
+      bpl: break point list
+      gds: gdb debug symbols
     """
 
     # pass remote mode
-    if hasattr(_tube, "process_mode"):
+    if hasattr(_tube, "process_mode") and not force:
         if _tube.process_mode in ["remote", "websocket"]:
-            # TODO add support for remote debug
-            plog.warning(f"not support debug {_tube.process_mode} mode")
+            plog.warning(f"not support debug in {_tube.process_mode} mode")
             return
         elif _tube.process_mode == "debug":
             plog.warning(f"duplicate debug process")
@@ -43,3 +43,7 @@ def tube_debug(_tube: tube, gdbscript="", gds: dict = {}, bpl: list = []):
 
     # plog.info(f"exec gdb script:\n{res}")
     gdb.attach(_tube, res)
+
+    if hasattr(_tube, "process_mode") and _tube.process_mode == "ssh":
+        plog.waitfor(f"waiting remote process attached")
+        pause()

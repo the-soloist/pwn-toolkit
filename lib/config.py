@@ -4,11 +4,13 @@
 import argparse
 import configparser
 from pathlib import Path
+from pwnutils.lib.core.classes import ArgInfo, ArgCLI
 
 
 __all__ = [
     "PU_HOME",
     "SETTING",
+    "init_pwn_args",
     "init_parser",
 ]
 
@@ -16,6 +18,18 @@ __all__ = [
 PU_HOME = Path(__file__).parent.parent
 SETTING = configparser.ConfigParser()
 SETTING.read(PU_HOME / "setting.ini")
+
+
+def init_pwn_args(parser=None):
+    if not parser:
+        parser = init_parser()
+
+    args = parser.parse_args()
+    args.force = None
+    args.info = ArgInfo()
+    args.cli = ArgCLI()
+
+    return args
 
 
 def init_parser() -> argparse.ArgumentParser:
@@ -28,6 +42,7 @@ def init_parser() -> argparse.ArgumentParser:
     group.add_argument("-d", "--debug", action="store_true")
     group.add_argument("-l", "--local", action="store_true")
     group.add_argument("-r", "--remote", action="store_true")
+    group.add_argument("-s", "--ssh", action="store_true")
     group.add_argument("-w", "--websocket", action="store_true")
 
     # init default parser
