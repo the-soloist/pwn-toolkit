@@ -97,14 +97,14 @@ class websocket(tube):
         self.sock.shutdown()
 
 
-def recv_pointer(_tube: tube, delims=None, off=6, name=None, **kwargs):
+def recv_pointer(_tube: tube, delims=None, off=6, name=None, byteorder="little", **kwargs):
     if not delims:
         delims = default_delims[name]
 
     res = _tube.recvuntil(delims, **kwargs)
 
     if res:
-        addr = u64(res[-off:].ljust(8, b"\x00"))
+        addr = int.from_bytes(res[-off:], byteorder=byteorder)
         plog.debug(f"found pointer: {hex(addr)}")
     else:
         addr = None
