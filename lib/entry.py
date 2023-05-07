@@ -29,7 +29,7 @@ def pppwn(args, force=None):
         if len(context.terminal) == 0:
             split_horizon = os.get_terminal_size().columns - 90
             context.terminal = ["tmux", "sp", "-h", "-l", str(split_horizon)]
-            log.info(f"set `context.terminal = {str(context.terminal)}`")
+            log.debug(f"set `context.terminal = {str(context.terminal)}`")
 
     # set log level
     if args.verbose:
@@ -40,14 +40,14 @@ def pppwn(args, force=None):
 
     # remote mode
     if args.remote:
-        host, port = args.target
+        host, port = args.info.target
         sh = remote(host, port)
         sh.process_mode = "remote"
 
     # websocket mode
     elif args.websocket:
         from pwnutils.lib.tubes import websocket
-        sh = websocket(args.target)
+        sh = websocket(args.info.target)
         sh.process_mode = "websocket"
 
     elif args.ssh:
@@ -57,11 +57,10 @@ def pppwn(args, force=None):
         assert hasattr(args.cli, "kwargs")
         assert isinstance(args.cli.ssh, SSH)
 
-        if isinstance(args.cli.cmd, list):
-            assert len(args.cli.cmd) > 0
+        if isinstance(args.cli.cmd, list) and len(args.cli.cmd) > 0:
             command = args.cli.cmd
         else:
-            command = args.binary.path
+            command = args.info.binary.path
 
         sh = args.cli.ssh.process(command, **args.cli.kwargs)
         sh.process_mode = "ssh"
@@ -101,11 +100,10 @@ def pppwn(args, force=None):
         assert hasattr(args.cli, "cmd")
         assert hasattr(args.cli, "kwargs")
 
-        if isinstance(args.cli.cmd, list):
-            assert len(args.cli.cmd) > 0
+        if isinstance(args.cli.cmd, list) and len(args.cli.cmd) > 0:
             command = args.cli.cmd
         else:
-            command = args.binary.path
+            command = args.info.binary.path
 
         delete_unexpected_keyword(args.cli.kwargs, ["gdbscript"])
 
@@ -123,11 +121,10 @@ def pppwn(args, force=None):
         assert hasattr(args.cli, "cmd")
         assert hasattr(args.cli, "kwargs")
 
-        if isinstance(args.cli.cmd, list):
-            assert len(args.cli.cmd) > 0
+        if isinstance(args.cli.cmd, list) and len(args.cli.cmd) > 0:
             command = args.cli.cmd
         else:
-            command = args.binary.path
+            command = args.info.binary.path
 
         delete_unexpected_keyword(args.cli.kwargs, ["env"])
 
