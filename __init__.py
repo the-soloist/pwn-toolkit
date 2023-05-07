@@ -3,7 +3,7 @@ from pwnutils.toplevel import *
 
 
 # alias
-pwn_the_world = pppwn
+pwn_the_world = pwntube
 
 # init
 GDS = {}

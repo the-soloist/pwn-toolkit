@@ -6,7 +6,7 @@ from pwn import process, remote, gdb, log, pause, context
 
 
 __all__ = [
-    "pppwn"
+    "pwntube"
 ]
 
 
@@ -18,9 +18,9 @@ def delete_unexpected_keyword(arg, klist):
             pass
 
 
-def pppwn(args, force=None):
+def pwntube(args, force=None):
     if force:
-        """ sh = pppwn(args, force="remote") """
+        """ sh = pwntube(args, force="remote") """
         log.info(f"set {force} mode")
         setattr(args, force, True)
 
