@@ -33,10 +33,16 @@ def pwntube(args, force=None):
 
     # set log level
     if args.verbose:
+        from pwnutils.core.log import ulog
+
         if args.verbose == 1:
             context.log_level = "debug"
+        elif args.verbose == 2:
+            ulog.level("INFO")
+        elif args.verbose == 3:
+            ulog.level("DEBUG")
         else:
-            log.setLevel(0)
+            ulog.level("TRACE")
 
     # remote mode
     if args.remote:
