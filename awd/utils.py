@@ -4,7 +4,7 @@
 import json
 from pathlib import Path
 from pwn import context
-from pwnutils.lib.logger import plog
+from pwnutils.lib.log import plog
 
 
 __all__ = [

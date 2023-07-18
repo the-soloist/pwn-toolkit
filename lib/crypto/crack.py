@@ -6,7 +6,7 @@ import itertools
 import random
 import string
 from pwnlib.util.iters import bruteforce, mbruteforce
-from pwnutils.lib.logger import plog
+from pwnutils.lib.log import plog
 
 
 __all__ = [

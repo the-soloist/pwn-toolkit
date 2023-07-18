@@ -3,7 +3,7 @@
 
 
 from pwn import ELF
-from pwnutils.lib.logger import plog
+from pwnutils.lib.log import plog
 from pathlib import Path
 
 

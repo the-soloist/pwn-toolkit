@@ -4,16 +4,15 @@
 import logging
 from pwn import log
 from pwnlib.exception import PwnlibException
-from pwnlib.log import console, Formatter
-from pwnlib.log import Logger
+from pwnlib.log import console, Formatter, Logger
 from pwnlib.term import text
-from pwnutils.lib.core import color
+from pwnutils.core import color
 from tqdm import tqdm
 
 
 __all__ = [
-    "PwnLogger",
-    "TqdmLogger"
+    "PwnLogger", "plog",
+    "TqdmLogger", "tlog"
 ]
 
 
@@ -132,12 +131,13 @@ class TqdmLogger(object):
 
 console.setFormatter(LogFormatter())
 
+plog = PwnLogger()
+tlog = TqdmLogger()
+
 
 if __name__ == "__main__":
     # import ipdb
     # ipdb.set_trace()
-
-    plog = PwnLogger()
 
     plog.address(test=0xdeadbeef)
     plog.value(test=0xdeadbeef)
@@ -153,8 +153,6 @@ if __name__ == "__main__":
         plog.error("test")
     except:
         pass
-
-    tlog = TqdmLogger()
 
     tlog.address(test=0xdeadbeef)
     tlog.value(test=0xdeadbeef)

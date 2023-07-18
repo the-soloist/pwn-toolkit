@@ -4,8 +4,8 @@
 from websocket import WebSocket, ABNF, WebSocketException, WebSocketTimeoutException
 from pwn import u64
 from pwnlib.tubes.tube import tube
+from pwnutils.lib.log import plog
 from pwnutils.lib.debug import tube_debug
-from pwnutils.lib.logger import plog
 
 
 __all__ = [

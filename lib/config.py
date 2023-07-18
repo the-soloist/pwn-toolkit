@@ -4,7 +4,7 @@
 import argparse
 import configparser
 from pathlib import Path
-from pwnutils.lib.core.classes import ArgInfo, ArgCLI
+from pwnutils.core.classes import ArgInfo, ArgCLI
 
 
 __all__ = [

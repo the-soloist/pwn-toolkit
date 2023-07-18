@@ -7,14 +7,19 @@ import sys
 from loguru import logger
 from pathlib import Path
 from pwnutils.lib.config import SETTING
-from pwnutils.lib.core.fs import touch_s
+from pwnutils.core.fs import touch_s
 
 
 __all__ = [
-    "logger"
+    "logger",
+    "ulog"
 ]
 
 
+# set alias name
+ulog = logger
+
+# init log folder
 log_dir = Path(SETTING["log"]["dir"])
 log_path = log_dir / "pwn-utils.log"
 touch_s(log_path)
@@ -39,15 +44,15 @@ logfile_fmt = (
 logger.remove()
 
 # logger.remove(handler_id=None)  # 控制台静默运行
-logger.add(sys.stderr, level="INFO", format=stdout_fmt, enqueue=True)  # 命令终端日志级别默认为 INFO
+logger.add(sys.stderr, level="ERROR", format=stdout_fmt, enqueue=True)  # 命令终端日志级别默认为 INFO
 logger.add(log_path, level="TRACE", format=logfile_fmt, enqueue=True, encoding="utf-8")  # 日志文件默认为级别为 TRACE
 
 
 if __name__ == "__main__":
-    logger.trace("test trace")
-    logger.debug("test debug")
-    logger.info("test info")
-    logger.success("test success")
-    logger.warning("test warning")
-    logger.error("test error")
-    logger.critical("test critical")
+    logger.trace("test trace")        # level 1
+    logger.debug("test debug")        # level 2
+    logger.info("test info")          # level 3
+    logger.success("test success")    # level 4
+    logger.warning("test warning")    # level 5
+    logger.error("test error")        # level 6
+    logger.critical("test critical")  # level 7

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from pwn import gdb, tube, pause
-from pwnutils.lib.logger import plog
+from pwnutils.lib.log import plog
 
 
 __all__ = [

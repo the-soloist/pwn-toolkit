@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# reference:
-#   1. https://xuanxuanblingbling.github.io/ctf/tools/2021/01/10/bu/
+# edit from https://xuanxuanblingbling.github.io/ctf/tools/2021/01/10/bu/
 
 import struct
-from pwnutils.lib.logger import plog
+from pwnutils.lib.log import plog
 
 
 def uint8(n):

@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from . import cache
 from . import config
 from . import convert
-from . import core
 from . import crypto
 from . import debug
 from . import entry
-from . import logger
+from . import log
 from . import tubes
 
 
@@ -19,7 +17,6 @@ def try_import(path, name):
         print(f"cannot import lib.{name}, exception: {e}.")
 
 
-try_import(".", "database")
 try_import(".", "emu")
 try_import(".", "encode")
 try_import(".", "http")

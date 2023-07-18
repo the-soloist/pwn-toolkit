@@ -3,6 +3,7 @@
 
 import functools
 from pwn import log, context
+from pwnutils.core.log import ulog
 
 
 __all__ = [
@@ -11,6 +12,8 @@ __all__ = [
 
 
 def log_level(level=None):
+    ulog.debug(f"set pwnlog level to '{level}'")
+
     def dector(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
