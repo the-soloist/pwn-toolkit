@@ -5,7 +5,6 @@ from . import classes
 from . import color
 from . import decorates
 from . import fs
-from . import system
 from . import log
 
 
