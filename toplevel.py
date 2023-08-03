@@ -6,12 +6,12 @@ from pwn import *
 import pwnutils as pu
 
 from pwnutils import core
+from pwnutils.core.config import init_pwn_args
 
 from pwnutils import lib
-from pwnutils.lib import parser
-from pwnutils.lib.log import plog, tlog
-from pwnutils.lib.config import init_pwn_args
+from pwnutils.lib.convert import type2
 from pwnutils.lib.entry import pwntube
+from pwnutils.lib.log import plog, tlog
 from pwnutils.lib.tubes import *
 
 from pwnutils import osys

@@ -3,6 +3,7 @@
 
 from . import classes
 from . import color
+from . import config
 from . import decorates
 from . import fs
 from . import log

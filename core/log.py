@@ -6,7 +6,7 @@ import json
 import sys
 from loguru import logger
 from pathlib import Path
-from pwnutils.lib.config import SETTING
+from pwnutils.core.config import SETTING
 from pwnutils.core.fs import touch_s
 
 
