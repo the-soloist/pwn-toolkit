@@ -1,24 +1,32 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from websocket import WebSocket, ABNF, WebSocketException, WebSocketTimeoutException
 from pwn import u64
+from pwnlib.timeout import Timeout
 from pwnlib.tubes.tube import tube
-from pwnutils.lib.log import plog
+from pwnutils.core.log import ulog
 from pwnutils.lib.debug import tube_debug
+from pwnutils.lib.log import plog
+from typing import Union
+from websocket import WebSocket, ABNF, WebSocketException, WebSocketTimeoutException
 
 
 __all__ = [
     "websocket",
     "recv_pointer",
+    "run_command",
+    "cat_flag",
+    "recv_flag",
 ]
 
 
 default_delims = {
     "heap": [b"\x55", b"\x56"],
-    "libc": [b"\x7f"],
+    "libc": [b"\x7e", b"\x7f"],
     "stack": [b"\xfd\x7f", b"\xfe\x7f", b"\xff\x7f"],
 }
+
+default_timeout = Timeout.default
 
 
 class websocket(tube):
@@ -97,11 +105,11 @@ class websocket(tube):
         self.sock.shutdown()
 
 
-def recv_pointer(_tube: tube, delims=None, off=6, name=None, byteorder="little", **kwargs):
+def recv_pointer(io: tube, delims=None, off=6, name=None, byteorder="little", **kwargs):
     if not delims:
         delims = default_delims[name]
 
-    res = _tube.recvuntil(delims, **kwargs)
+    res = io.recvuntil(delims, **kwargs)
 
     if res:
         addr = int.from_bytes(res[-off:], byteorder=byteorder)
@@ -113,18 +121,42 @@ def recv_pointer(_tube: tube, delims=None, off=6, name=None, byteorder="little",
     return addr
 
 
+def run_command(io, cmd):
+    ulog.info(f"run command: {cmd}")
+
+    if isinstance(cmd, str):
+        cmd = cmd.encode()
+
+    io.sendline(cmd)
+
+
+def cat_flag(io: tube, path="flag", prefix="flag"):
+    run_command(io, f"cat {path}".encode())
+    return recv_flag(io, prefix)
+
+
+def recv_flag(io, prefix="flag"):
+    io.recvuntil(f"{prefix}{{".encode())
+    content = io.ru(b"}", drop=True).decode()
+    flag = "flag{%s}" % content
+
+    ulog.info(f"recv flag content: {flag}")
+    return flag
+
+
 # add new tube function
+tube.command = tube.cmd = run_command
 tube.proc_debug = tube.dbg = tube_debug
 tube.recv_pointer = tube.rp = recv_pointer
 
 # add tube alias
+tube.r = tube.recv
+tube.rl = tube.recvline
+tube.ru = tube.recvuntil
 tube.s = tube.send
 tube.sa = tube.sendafter
 tube.sl = tube.sendline
 tube.sla = tube.sendlineafter
-tube.r = tube.recv
-tube.rl = tube.recvline
-tube.ru = tube.recvuntil
 
 
 if __name__ == "__main__":
