@@ -9,11 +9,7 @@ from pathlib import Path
 from pwnutils.core.config import SETTING
 from pwnutils.core.fs import touch_s
 
-
-__all__ = [
-    "logger",
-    "ulog"
-]
+__all__ = ["ulog"]
 
 
 # set alias name

@@ -3,6 +3,11 @@
 
 from pathlib import Path
 
+__all__ = [
+    "mkdir_s",
+    "touch_s"
+]
+
 
 def mkdir_s(path: Path):
     if not path.exists():
@@ -11,4 +16,5 @@ def mkdir_s(path: Path):
 
 def touch_s(path: Path):
     mkdir_s(path.parent)
-    path.touch()
+    if not path.exists():
+        path.touch()

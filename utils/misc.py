@@ -13,21 +13,6 @@ __all__ = [
 ]
 
 
-""" 
-s = lambda data: sh.send(data)
-sa = lambda delim, data: sh.sendafter(delim, data)
-sl = lambda data: sh.sendline(data)
-sla = lambda delim, data: sh.sendlineafter(delim, data)
-r = lambda numb=0x1000: sh.recv(numb)
-rl = lambda keepends=True: sh.recvline(keepends)
-ru = lambda delims, drop=False: sh.recvuntil(delims, drop)
-
-plog = lambda x: log.success('%s >> %s' % (x, hex(eval(x)))) if type(eval(x)) == int else log.success('%s >> %s' % (x, eval(x)))
-paddr = lambda name, value: log.success("%s -> 0x%x" % (name, value))
-pinfo = lambda *args, end=" ": log.info(("%s" % end).join([str(x) for x in args]))
-psucc = lambda *args, end=" ": log.success(("%s" % end).join([str(x) for x in args]))
-"""
-
 uu8 = u8
 uu16 = lambda data: u16(data.ljust(2, b"\x00"))
 uu32 = lambda data: u32(data.ljust(4, b"\x00"))
