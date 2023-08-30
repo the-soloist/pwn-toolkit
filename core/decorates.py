@@ -5,22 +5,32 @@ import functools
 from pwn import log, context
 from pwnutils.core.log import ulog
 
-
 __all__ = [
-    "log_level"
+    "log_level",
+    "use_pwnio"
 ]
 
 
-def log_level(level=None):
+def log_level(level):
     ulog.debug(f"set pwnlog level to '{level}'")
 
     def dector(func):
         @functools.wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*a, **k):
             old_log_level = context.log_level
             context.log_level = level
-            res = func(*args, **kwargs)
+            res = func(*a, **k)
             context.log_level = old_log_level
             return res
         return wrapper
     return dector
+
+
+def use_pwnio(func):
+    ulog.debug(f"set pwn io`")
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        from pwnutils import pwnobj
+        return func(pwnobj.io, *args, **kwargs)
+    return wrapper
