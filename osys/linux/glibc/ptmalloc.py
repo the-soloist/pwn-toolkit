@@ -2,28 +2,21 @@
 # -*- coding: utf-8 -*-
 
 
-def safe_link(pos, ptr, only_xor=False):
+def protect_ptr(pos, ptr):
+    return (pos >> 12) ^ ptr
+
+
+def reveal_ptr(ptr):
     """
-    for glibc 2.32
-        encode a given safe link into its original pointer
-    """
+    hex(protect_ptr(0x55a6fbda92e0, 0x55a6fbda92a0)) == 0x55a3a1b52f09
 
-    if only_xor is True:
-        return pos ^ ptr
-    else:
-        return (pos >> 12) ^ ptr
-
-
-def unsafe_link(obfus_ptr):
-    """
-    for glibc 2.32 
-        decode a given safe link into its original pointer
-
-    ref:
-        - https://github.com/x64x6a/ctf-writeups/blob/master/PlaidCTF_2021/pwnable/plaidflix/solve.py#L12
-        - https://gist.github.com/hkraw/0576a28c5436734d0fbe6d8ddd378143#file-plaidctf-plaidflix-py-L8
-        - https://github.com/MaherAzzouzi/LinuxExploitation/blob/master/PlaidCTF-plaidflix/solve.py#L83
+         o2 =    (0x55a|6fbda9 ^ 
+                     0x|55a6fb) ^ 
+              (0x55a6fb|da92e0 ^ 
+                  0x55a|6fbda9)
+    ==>  o2 =  0x55a6fb|(da92e0^55a6fb)
+    ==>  o2 >> 24 == 0x55a6fb
     """
 
-    o2 = (obfus_ptr >> 12) ^ obfus_ptr
-    return (o2 >> 24) ^ o2
+    o2 = (ptr >> 12) ^ ptr  # 恢复高3字节 0xAAAXXXAAAAAA
+    return (o2 >> 24) ^ o2  # 恢复低3字节 0xAAABBBXXXXXX
