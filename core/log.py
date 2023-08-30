@@ -6,8 +6,9 @@ import json
 import sys
 from loguru import logger
 from pathlib import Path
-from pwnutils.core.config import SETTING
-from pwnutils.core.fs import touch_s
+
+from pwnkit.core.config import SETTING
+from pwnkit.core.fs import touch_s
 
 __all__ = ["ulog"]
 
@@ -17,7 +18,7 @@ ulog = logger
 
 # init log folder
 log_dir = Path(SETTING["log"]["dir"])
-log_path = log_dir / "pwn-utils.log"
+log_path = log_dir / "pwnkit.log"
 touch_s(log_path)
 
 

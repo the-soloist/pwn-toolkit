@@ -4,12 +4,12 @@
 from pwn import u64
 from pwnlib.timeout import Timeout
 from pwnlib.tubes.tube import tube
-from pwnutils.core.log import ulog
-from pwnutils.lib.debug import tube_debug
-from pwnutils.lib.log import plog
 from typing import Union
 from websocket import WebSocket, ABNF, WebSocketException, WebSocketTimeoutException
 
+from pwnkit.core.log import ulog
+from pwnkit.lib.debug import tube_debug
+from pwnkit.lib.log import plog
 
 __all__ = [
     "websocket",

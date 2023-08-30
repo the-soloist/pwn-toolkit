@@ -1,5 +1,5 @@
-import pwnutils as pu
-from pwnutils.toplevel import *
+import pwnkit as pk
+from pwnkit.toplevel import *
 
 
 # alias

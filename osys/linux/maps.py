@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import psutil
+import sys
 from psutil._common import bytes2human
 from psutil._compat import get_terminal_size
 from pwn import gdb, log, process
-import psutil
-import sys
 
 
 def safe_print(s):

@@ -1,6 +1,16 @@
-# pwnutils
+# pwn-toolkit
 
 自用的一个做 pwn 题的 python 库，封装一些常用的函数。
+
+实现思路是在 python 脚本中配置参数，然后可以通过命令行参数切换运行模式。
+
+目前支持模式：
+
+- debug（[gdb.debug](https://github.com/Gallopsled/pwntools/blob/dev/pwnlib/gdb.py)）
+- local（[pwnlib.tubes.process](https://github.com/Gallopsled/pwntools/blob/dev/pwnlib/tubes/process.py)）
+- remote（[pwnlib.tubes.remote](https://github.com/Gallopsled/pwntools/blob/dev/pwnlib/tubes/remote.py)）
+- ssh（[pwnlib.tubes.ssh](https://github.com/Gallopsled/pwntools/blob/dev/pwnlib/tubes/ssh.py)，推荐和 [pwn-env-docker](https://github.com/the-soloist/pwn-env-docker) 结合使用）
+- websocket（[websocket-client](https://github.com/websocket-client/websocket-client)）
 
 ## ENV
 
@@ -13,31 +23,27 @@ python 3.10.x
 
 ```sh
 # 安装依赖
-pip3 install -r requirements.txt
-# pip3 install pwntools==4.3.1
-pip3 install pybase62 prettytable termcolor tabulate pycryptodome websocket-client
-
-git clone https://github.com/thenoviceoof/base92 pkg/base92
-git clone https://github.com/stek29/base100 pkg/base100
+python3 -m pip install -r requirements.txt
+python3 -m pip install pybase62 prettytable termcolor tabulate pycryptodome websocket-client
 
 # 导入模块
-git clone https://github.com/the-soloist/pwn-utils pwnutils
-export PYTHONPATH="$PYTHONPATH:/path/to/pwnutils"
+git clone https://github.com/the-soloist/pwn-toolkit pwnkit
+export PYTHONPATH="$PYTHONPATH:/path/to/pwnkit"
 
 # 或者 python 中加入
-sys.path.append("/path/to/pwnutils")
+sys.path.append("/path/to/pwnkit")
 
 # 修改环境变量
-export PATH="$PATH:/path/to/pwnutils/bin"
+export PATH="$PATH:/path/to/pwnkit/bin"
 ```
 
 ## USAGE
 
 ```python
-from pwnutils import *
+from pwnkit import *
 ```
 
-使用文档：[doc](doc) （未完成）
+详细使用文档：[docs](docs) （未完成）
 
 ## REFERENCE
 

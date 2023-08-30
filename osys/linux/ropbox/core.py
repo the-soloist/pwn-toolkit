@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from pwn import ELF, ROP, asm
-from pwnutils.lib.system.linux import search_gadget
 from typing import Union
+
+from pwnkit.lib.system.linux import search_gadget
 
 __all__ = [
     "GadgetBox",

@@ -4,7 +4,8 @@
 import argparse
 import configparser
 from pathlib import Path
-from pwnutils.core.classes import ArgInfo, ArgCLI
+
+from pwnkit.core.classes import ArgInfo, ArgCLI
 
 __all__ = [
     "PU_HOME",

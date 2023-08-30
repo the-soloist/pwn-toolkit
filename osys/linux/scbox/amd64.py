@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from pwnlib.constants.linux import amd64 as constants
-from pwnutils.osys.linux.mem import bytes2mem
+
+from pwnkit.osys.linux.mem import bytes2mem
 
 
 """ 64 bits shellcode """

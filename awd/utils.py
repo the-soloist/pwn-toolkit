@@ -3,7 +3,8 @@
 
 from pathlib import Path
 from pwn import context, remote
-from pwnutils.lib.log import plog
+
+from pwnkit.lib.log import plog
 
 __all__ = [
     "run"

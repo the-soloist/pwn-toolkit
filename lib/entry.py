@@ -4,7 +4,6 @@
 import os
 from pwn import process, remote, gdb, log, pause, context
 
-
 __all__ = [
     "pwntube"
 ]
@@ -33,7 +32,7 @@ def pwntube(args, force=None):
 
     # set log level
     if args.verbose:
-        from pwnutils.core.log import ulog
+        from pwnkit.core.log import ulog
 
         if args.verbose == 1:
             context.log_level = "debug"
@@ -53,7 +52,7 @@ def pwntube(args, force=None):
     # websocket mode
     elif args.websocket:
         """ args.info.target = {"url": "wss://example.server"} """
-        from pwnutils.lib.tubes import websocket
+        from pwnkit.lib.tubes import websocket
         io = websocket(**args.info.target)
         io.process_mode = "websocket"
 
@@ -92,7 +91,7 @@ def pwntube(args, force=None):
 
         2. edit py script:
             ```
-            from pwnutils.osys.linux.elf.process import kill_process_by_name
+            from pwnkit.osys.linux.elf.process import kill_process_by_name
             kill_process_by_name("qemu")
             ```
 
@@ -139,7 +138,7 @@ def pwntube(args, force=None):
         io.process_mode = "debug"
 
     else:
-        from pwnutils import parser
+        from pwnkit import parser
         parser.print_help()
         exit(0)
 

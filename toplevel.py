@@ -3,21 +3,19 @@ import ipdb
 from tqdm import tqdm
 from pwn import *
 
-import pwnutils as pu
+from pwnkit import core
+from pwnkit.core.config import init_pwn_args
 
-from pwnutils import core
-from pwnutils.core.config import init_pwn_args
+from pwnkit import lib
+from pwnkit.lib.convert import type2
+from pwnkit.lib.entry import pwntube
+from pwnkit.lib.log import plog, tlog
+from pwnkit.lib.tubes import *
 
-from pwnutils import lib
-from pwnutils.lib.convert import type2
-from pwnutils.lib.entry import pwntube
-from pwnutils.lib.log import plog, tlog
-from pwnutils.lib.tubes import *
+from pwnkit import osys
 
-from pwnutils import osys
+from pwnkit import utils
+from pwnkit.utils import gift
+from pwnkit.utils.misc import *
 
-from pwnutils import utils
-from pwnutils.utils import gift
-from pwnutils.utils.misc import *
-
-from pwnutils import awd
+from pwnkit import awd

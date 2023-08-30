@@ -3,7 +3,8 @@
 
 import functools
 from pwn import log, context
-from pwnutils.core.log import ulog
+
+from pwnkit.core.log import ulog
 
 __all__ = [
     "log_level",
@@ -31,6 +32,6 @@ def use_pwnio(func):
 
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        from pwnutils import pwnobj
+        from pwnkit import pwnobj
         return func(pwnobj.io, *args, **kwargs)
     return wrapper

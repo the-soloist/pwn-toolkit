@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from pwnlib.constants.linux import i386 as constants
-from pwnutils.osys.linux.mem import bytes2mem
+
+from pwnkit.osys.linux.mem import bytes2mem
+
 
 """ 32 bits shellcode """
 

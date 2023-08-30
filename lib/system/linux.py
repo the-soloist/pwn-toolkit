@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from pwn import ELF, asm
-from pwnutils.core.log import ulog
-from pwnutils.core.decorates import log_level
+
+from pwnkit.core.log import ulog
+from pwnkit.core.decorates import log_level
 
 
 @log_level("info")

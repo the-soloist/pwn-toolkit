@@ -6,9 +6,9 @@ from pwn import log
 from pwnlib.exception import PwnlibException
 from pwnlib.log import console, Formatter, Logger
 from pwnlib.term import text
-from pwnutils.core import color
 from tqdm import tqdm
 
+from pwnkit.core import color
 
 __all__ = [
     "PwnLogger", "plog",
@@ -60,7 +60,7 @@ class LogFormatter(Formatter):
 
 class PwnLogger(Logger):
     def __init__(self):
-        logger = logging.getLogger("pwnlib.pwnutils")
+        logger = logging.getLogger("pwnlib.pwnkit")
         self._logger = logger
 
     def address(self, **kwargs):

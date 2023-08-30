@@ -6,8 +6,8 @@ import itertools
 import random
 import string
 from pwnlib.util.iters import bruteforce, mbruteforce
-from pwnutils.lib.log import plog
 
+from pwnkit.lib.log import plog
 
 __all__ = [
     "gen_strings_series",

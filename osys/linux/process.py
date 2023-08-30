@@ -22,7 +22,7 @@ def get_pid_by_name(name):
 
 
 def kill_process_by_name(name):
-    from pwnutils.lib.log import plog
+    from pwnkit.lib.log import plog
 
     pid = get_pid_by_name(name)
 

@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import urllib
-from pwnutils.lib.convert.type2 import t2bytes
+
+from pwnkit.lib.convert.type2 import t2bytes
 
 
 CRLF = b"\r\n"

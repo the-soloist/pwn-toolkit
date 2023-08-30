@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pwnutils.lib.convert.type2 import bytes2int, t2bytes
+from pwnkit.lib.convert.type2 import bytes2int, t2bytes
 
 
 def bytes2mem(string, mode=64, endian="little"):

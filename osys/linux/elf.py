@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
 from pwn import ELF
-from pwnutils.lib.log import plog
 from pathlib import Path
+
+from pwnkit.lib.log import plog
 
 
 def find_str(elf: ELF, string: bytes):

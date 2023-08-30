@@ -3,7 +3,8 @@
 
 import html
 import urllib
-from pwnutils.lib.convert.type2 import t2str, t2bytes
+
+from pwnkit.lib.convert.type2 import t2str, t2bytes
 
 
 def hex_encode(text) -> str:
