@@ -167,22 +167,22 @@ def sendfile(out_fd, in_fd, offset, count):
     return "\n".join(code)
 
 
-def call(syscall_name, a1=None, a2=None, a3=None, a4=None, a5=None, a6=None):
+def syscall(syscall_name, a1=None, a2=None, a3=None, a4=None, a5=None, a6=None):
     nr = getattr(constants, f"__NR_{syscall_name}")
 
     code = ""
     if a1:
-        code += f"mov rdi, {start}\n"
+        code += f"mov rdi, {a1}\n"
     if a2:
-        code += f"mov rsi, {length}\n"
+        code += f"mov rsi, {a2}\n"
     if a3:
-        code += f"mov rdx, {prot}\n"
+        code += f"mov rdx, {a3}\n"
     if a4:
-        code += f"mov r10, {flags}\n"
+        code += f"mov r10, {a4}\n"
     if a5:
-        code += f"mov r8, {fd}\n"
+        code += f"mov r8, {a5}\n"
     if a6:
-        code += f"mov r9, {offsize}\n"
+        code += f"mov r9, {a6}\n"
     code += f"mov rax, {int(nr)}\n"
     code += "syscall"
 
@@ -262,22 +262,22 @@ def sys32_mmap2(start, length, prot, flags, fd, offsize):
     return "\n".join(code)
 
 
-def sys32_call(syscall_name, a1=None, a2=None, a3=None, a4=None, a5=None, a6=None):
+def sys32_syscall(syscall_name, a1=None, a2=None, a3=None, a4=None, a5=None, a6=None):
     nr = getattr(constants, f"SYS32_{syscall_name}")
 
     code = ""
     if a1:
-        code += f"mov rbx, {start}\n"
+        code += f"mov rbx, {a1}\n"
     if a2:
-        code += f"mov rcx, {length}\n"
+        code += f"mov rcx, {a2}\n"
     if a3:
-        code += f"mov rdx, {prot}\n"
+        code += f"mov rdx, {a3}\n"
     if a4:
-        code += f"mov rsi, {flags}\n"
+        code += f"mov rsi, {a4}\n"
     if a5:
-        code += f"mov rdi, {fd}\n"
+        code += f"mov rdi, {a5}\n"
     if a6:
-        code += f"mov rbp, {offsize}\n"
+        code += f"mov rbp, {a6}\n"
     code += f"mov rax, {int(nr)}\n"
     code += "int 0x80"
 

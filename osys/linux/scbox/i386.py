@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from pwnlib.constants.linux import i386 as constants
-
+from pwnutils.osys.linux.mem import bytes2mem
 
 """ 32 bits shellcode """
 
@@ -11,11 +11,20 @@ def write_bytes(text, target):
     code = []
 
     code.append(f"mov eax, {target}")
-
     for v in bytes2mem(text, 32, "little")[::-1]:
         code.append(f"mov ebx, {hex(v)}")
         code.append("mov [eax], ebx")
         code.append("add eax, 4")
+
+    return "\n".join(code)
+
+
+def write_to_stack(text: bytes):
+    code = []
+
+    for v in bytes2mem(text, 32, "little")[::-1]:
+        code.append(f"mov eax, {hex(v)}")
+        code.append(f"push eax")
 
     return "\n".join(code)
 
@@ -141,22 +150,22 @@ def mmap2(start, length, prot, flags, fd, offsize):
     return "\n".join(code)
 
 
-def call(syscall_name, a1=None, a2=None, a3=None, a4=None, a5=None, a6=None):
+def syscall(syscall_name, a1=None, a2=None, a3=None, a4=None, a5=None, a6=None):
     nr = getattr(constants, f"__NR_{syscall_name}")
 
     code = ""
     if a1:
-        code += f"mov ebx, {start}\n"
+        code += f"mov ebx, {a1}\n"
     if a2:
-        code += f"mov ecx, {length}\n"
+        code += f"mov ecx, {a2}\n"
     if a3:
-        code += f"mov edx, {prot}\n"
+        code += f"mov edx, {a3}\n"
     if a4:
-        code += f"mov esi, {flags}\n"
+        code += f"mov esi, {a4}\n"
     if a5:
-        code += f"mov edi, {fd}\n"
+        code += f"mov edi, {a5}\n"
     if a6:
-        code += f"mov ebp, {offsize}\n"
+        code += f"mov ebp, {a6}\n"
     code += f"mov eax, {int(nr)}\n"
     code += "int 0x80"
 
