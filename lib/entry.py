@@ -20,14 +20,14 @@ def delete_unexpected_keyword(arg, klist):
 
 def pwntube(args, force=None):
     if force:
-        """ sh = pwntube(args, force="remote") """
+        """ io = pwntube(args, force="remote") """
         log.info(f"set {force} mode")
         setattr(args, force, True)
 
     # set context.terminal
     if os.getenv("TMUX"):
         if len(context.terminal) == 0:
-            split_horizon = os.get_terminal_size().columns - 90
+            split_horizon = os.get_terminal_size().columns - 89
             context.terminal = ["tmux", "sp", "-h", "-l", str(split_horizon)]
             log.debug(f"set `context.terminal = {str(context.terminal)}`")
 
@@ -46,15 +46,16 @@ def pwntube(args, force=None):
 
     # remote mode
     if args.remote:
-        host, port = args.info.target
-        sh = remote(host, port)
-        sh.process_mode = "remote"
+        """ args.info.target = {"host": "example.server", "port": 9999} """
+        io = remote(**args.info.target)
+        io.process_mode = "remote"
 
     # websocket mode
     elif args.websocket:
+        """ args.info.target = {"url": "wss://example.server"} """
         from pwnutils.lib.tubes import websocket
-        sh = websocket(args.info.target)
-        sh.process_mode = "websocket"
+        io = websocket(**args.info.target)
+        io.process_mode = "websocket"
 
     elif args.ssh:
         from pwn import ssh as SSH
@@ -68,16 +69,16 @@ def pwntube(args, force=None):
         else:
             command = args.info.binary.path
 
-        sh = args.cli.ssh.process(command, **args.cli.kwargs)
-        sh.process_mode = "ssh"
+        io = args.cli.ssh.process(command, **args.cli.kwargs)
+        io.process_mode = "ssh"
 
     # local mode
     elif args.local:
         """ 
         Run with local mode:
 
-          >>> sh = process([ld.path, binary.path], env={"LD_PRELOAD": libc.path})
-          >>> sh = process([f"qemu-{context.arch}", "-g", "9999", "-L", ".", binary.path])
+          >>> io = process([ld.path, binary.path], env={"LD_PRELOAD": libc.path})
+          >>> io = process([f"qemu-{context.arch}", "-g", "9999", "-L", ".", binary.path])
 
           >>> args.cli.cmd = [ld.path, binary.path]
           >>> args.cli.kwargs = { "env": {"LD_PRELOAD": "/path/to/libc.so"}, }
@@ -113,8 +114,8 @@ def pwntube(args, force=None):
 
         delete_unexpected_keyword(args.cli.kwargs, ["gdbscript"])
 
-        sh = process(command, **args.cli.kwargs)
-        sh.process_mode = "local"
+        io = process(command, **args.cli.kwargs)
+        io.process_mode = "local"
 
     # debug mode
     elif args.debug:
@@ -134,12 +135,12 @@ def pwntube(args, force=None):
 
         delete_unexpected_keyword(args.cli.kwargs, ["env"])
 
-        sh = gdb.debug(command, **args.cli.kwargs)
-        sh.process_mode = "debug"
+        io = gdb.debug(command, **args.cli.kwargs)
+        io.process_mode = "debug"
 
     else:
-        from pwnutils.lib import parser
+        from pwnutils import parser
         parser.print_help()
         exit(0)
 
-    return sh
+    return io
