@@ -3,7 +3,7 @@ from pwnkit.toplevel import *
 
 
 # alias
-pwn_the_world = pwntube
+autopwn = pwn_the_world = pwntube  # XD
 parser = core.config.init_parser()
 
 # init
