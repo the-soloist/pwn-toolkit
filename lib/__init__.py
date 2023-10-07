@@ -9,7 +9,6 @@ from . import log
 from . import system
 from . import tubes
 
-
 def try_import(path, name):
     try:
         exec(f"from {path} import {name}")
@@ -18,7 +17,7 @@ def try_import(path, name):
 
 
 try_import(".", "emu")
-try_import(".", "encode")
+try_import(".", "encoder")
 try_import(".", "http")
 del try_import
 

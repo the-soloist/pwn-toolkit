@@ -24,7 +24,8 @@ python 3.10.x
 ```sh
 # 安装依赖
 python3 -m pip install -r requirements.txt
-python3 -m pip install pybase62 prettytable termcolor tabulate pycryptodome websocket-client
+python3 -m pip install base45 pybase62
+python3 -m pip install prettytable termcolor tabulate pycryptodome websocket-client
 
 # 导入模块
 git clone https://github.com/the-soloist/pwn-toolkit pwnkit
