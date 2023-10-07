@@ -47,6 +47,8 @@ def init_parser() -> argparse.ArgumentParser:
 
     # init default parser
     parser.add_argument("-v", "--verbose", action="count", help="print verbose output")
+    parser.add_argument("--host", action="store", default="None", type=str)
+    parser.add_argument("--port", action="store", default=0, type=int)
 
     # init awd sub parser
     subparsers = parser.add_subparsers(dest="subparser", help="sub command")
