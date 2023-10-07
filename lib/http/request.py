@@ -3,7 +3,7 @@
 
 import urllib
 
-from pwnkit.lib.convert.type2 import t2bytes
+from pwnkit.lib.convert.type2 import v2b
 
 
 CRLF = b"\r\n"
@@ -24,12 +24,12 @@ def dump_http_request(method, url, header: dict, data=None) -> bytes:
     dump = bytes(f"{method} {url}", encoding="utf-8") + CRLF
 
     for k, v in header.items():
-        nk, nv = t2bytes(k), t2bytes(v)
+        nk, nv = v2b(k), v2b(v)
         dump += nk + b": " + nv + CRLF
 
     dump += CRLF
 
     if data:
-        dump += t2bytes(data)
+        dump += v2b(data)
 
     return dump

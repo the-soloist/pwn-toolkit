@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pwnkit.lib.convert.type2 import bytes2int, t2bytes
+from pwnkit.lib.convert.type2 import b2i, v2b
 
 
 def bytes2mem(string, mode=64, endian="little"):
@@ -13,11 +13,11 @@ def bytes2mem(string, mode=64, endian="little"):
     assert mode % 8 == 0
     bytes_align = mode // 8
     res = []
-    string = t2bytes(string)
+    string = v2b(string)
 
     for i in range(len(string) // bytes_align + 1):
         s = string[i * bytes_align:(i + 1) * bytes_align]
-        n = bytes2int(s, endian)
+        n = b2i(s, endian)
         res.append(n)
 
     return res

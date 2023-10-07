@@ -4,35 +4,35 @@
 import html
 import urllib
 
-from pwnkit.lib.convert.type2 import t2str, t2bytes
+from pwnkit.lib.convert.type2 import v2s, v2b
 
 
 def hex_encode(text) -> str:
     """ [bytes, str] -> str """
-    return " ".join(['%02X' % x for x in t2bytes(text)])
+    return " ".join(['%02X' % x for x in v2b(text)])
 
 
 def hex_decode(text) -> bytes:
     """ [bytes, str] -> bytes """
-    hex_list = t2bytes(text).decode().split(" ")
+    hex_list = v2b(text).decode().split(" ")
     return b"".join([bytes.fromhex(x) for x in hex_list])
 
 
 def html_encode(text) -> str:
     """ str -> str """
-    return html.escape(t2str(text))
+    return html.escape(v2s(text))
 
 
 def html_decode(text) -> str:
     """ str -> str """
-    return html.unescape(t2str(text))
+    return html.unescape(v2s(text))
 
 
 def unicode_encode(text) -> str:
     """ [bytes, str] -> str """
 
     res = list()
-    for c in t2str(text):
+    for c in v2s(text):
         res.append(f"\\u{char2unicode(c)}")
 
     return "".join(res)
@@ -40,7 +40,7 @@ def unicode_encode(text) -> str:
 
 def unicode_decode(text) -> str:
     """ [bytes, str] -> str """
-    return t2str(text)
+    return v2s(text)
 
 
 def url_encode(text) -> str:
@@ -50,4 +50,4 @@ def url_encode(text) -> str:
 
 def url_decode(text) -> str:
     """ str -> str """
-    return urllib.parse.unquote(t2str(text))
+    return urllib.parse.unquote(v2s(text))
