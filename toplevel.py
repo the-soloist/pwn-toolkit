@@ -15,7 +15,7 @@ from pwnkit.lib.tubes import *
 from pwnkit import osys
 
 from pwnkit import utils
-from pwnkit.utils import gift
+from pwnkit.utils.giftbox import gift
 from pwnkit.utils.misc import *
 
 from pwnkit import awd
