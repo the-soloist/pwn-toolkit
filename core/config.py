@@ -5,7 +5,7 @@ import argparse
 import configparser
 from pathlib import Path
 
-from pwnkit.core.classes import ArgInfo, ArgCLI
+from pwnkit.core.classes import ArgInfo, ArgEnv
 
 __all__ = [
     "PU_HOME",
@@ -27,7 +27,7 @@ def init_pwn_args(parser=None):
     args = parser.parse_args()
     args.force = None
     args.info = ArgInfo()
-    args.cli = ArgCLI()
+    args.env = ArgEnv()
 
     return args
 
@@ -47,7 +47,7 @@ def init_parser() -> argparse.ArgumentParser:
 
     # init default parser
     parser.add_argument("-v", "--verbose", action="count", help="print verbose output")
-    parser.add_argument("--host", action="store", default="None", type=str)
+    parser.add_argument("--host", action="store", default=None, type=str)
     parser.add_argument("--port", action="store", default=0, type=int)
 
     # init awd sub parser

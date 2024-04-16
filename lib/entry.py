@@ -18,6 +18,14 @@ def delete_unexpected_keyword(arg, klist):
 
 
 def pwntube(args, force=None):
+    """ 
+    Arguments:
+        force(str):
+            force run in choosen mode
+        upload(boolen):
+            auto upload files in SSH mode
+    """
+
     if force:
         """ io = pwntube(args, force="remote") """
         log.info(f"set {force} mode")
@@ -53,22 +61,23 @@ def pwntube(args, force=None):
     elif args.websocket:
         """ args.info.target = {"url": "wss://example.server"} """
         from pwnkit.lib.tubes import websocket
+
         io = websocket(**args.info.target)
         io.process_mode = "websocket"
 
     elif args.ssh:
-        from pwn import ssh as SSH
+        from pwnlib.tubes.ssh import ssh as SSH
 
-        assert hasattr(args.cli, "cmd")
-        assert hasattr(args.cli, "kwargs")
-        assert isinstance(args.cli.ssh, SSH)
+        assert hasattr(args.env, "cmd")
+        assert hasattr(args.env, "kwargs")
+        assert isinstance(args.env.ssh, SSH)
 
-        if isinstance(args.cli.cmd, list) and len(args.cli.cmd) > 0:
-            command = args.cli.cmd
+        if isinstance(args.env.cmd, list) and len(args.env.cmd) > 0:
+            command = args.env.cmd
         else:
-            command = args.info.binary.path
+            command = [args.info.binary.path]
 
-        io = args.cli.ssh.process(command, **args.cli.kwargs)
+        io = args.env.ssh.process(command, **args.env.kwargs)
         io.process_mode = "ssh"
 
     # local mode
@@ -79,8 +88,8 @@ def pwntube(args, force=None):
           >>> io = process([ld.path, binary.path], env={"LD_PRELOAD": libc.path})
           >>> io = process([f"qemu-{context.arch}", "-g", "9999", "-L", ".", binary.path])
 
-          >>> args.cli.cmd = [ld.path, binary.path]
-          >>> args.cli.kwargs = { "env": {"LD_PRELOAD": "/path/to/libc.so"}, }
+          >>> args.env.cmd = [ld.path, binary.path]
+          >>> args.env.kwargs = { "env": {"LD_PRELOAD": "/path/to/libc.so"}, }
 
         Start with qemu: 
         1. append gdb script:
@@ -95,25 +104,25 @@ def pwntube(args, force=None):
             kill_process_by_name("qemu")
             ```
 
-          >>> args.cli.cmd = [f"qemu-{context.arch}", "-g", "9999", "-L", ".", binary.path]
-          >>> args.cli.cmd = ["./run.sh"]
+          >>> args.env.cmd = [f"qemu-{context.arch}", "-g", "9999", "-L", ".", binary.path]
+          >>> args.env.cmd = ["./run.sh"]
 
           >>> cat ./run.sh
           #!/bin/bash
           qemu-mips -g 9999 -L . /path/to/binary
         """
 
-        assert hasattr(args.cli, "cmd")
-        assert hasattr(args.cli, "kwargs")
+        assert hasattr(args.env, "cmd")
+        assert hasattr(args.env, "kwargs")
 
-        if isinstance(args.cli.cmd, list) and len(args.cli.cmd) > 0:
-            command = args.cli.cmd
+        if isinstance(args.env.cmd, list) and len(args.env.cmd) > 0:
+            command = args.env.cmd
         else:
-            command = args.info.binary.path
+            command = [args.info.binary.path]
 
-        delete_unexpected_keyword(args.cli.kwargs, ["gdbscript"])
+        delete_unexpected_keyword(args.env.kwargs, ["gdbscript"])
 
-        io = process(command, **args.cli.kwargs)
+        io = process(command, **args.env.kwargs)
         io.process_mode = "local"
 
     # debug mode
@@ -121,20 +130,20 @@ def pwntube(args, force=None):
         """ 
         Run with debug mode:
 
-          >>> args.cli.kwargs = {"gdbscript": GDB_SCRIPT, }
+          >>> args.env.kwargs = {"gdbscript": GDB_SCRIPT, }
         """
 
-        assert hasattr(args.cli, "cmd")
-        assert hasattr(args.cli, "kwargs")
+        assert hasattr(args.env, "cmd")
+        assert hasattr(args.env, "kwargs")
 
-        if isinstance(args.cli.cmd, list) and len(args.cli.cmd) > 0:
-            command = args.cli.cmd
+        if isinstance(args.env.cmd, list) and len(args.env.cmd) > 0:
+            command = args.env.cmd
         else:
-            command = args.info.binary.path
+            command = [args.info.binary.path]
 
-        delete_unexpected_keyword(args.cli.kwargs, ["env"])
+        delete_unexpected_keyword(args.env.kwargs, ["env"])
 
-        io = gdb.debug(command, **args.cli.kwargs)
+        io = gdb.debug(command, **args.env.kwargs)
         io.process_mode = "debug"
 
     else:
