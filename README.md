@@ -8,9 +8,13 @@
 
 - debug（[gdb.debug](https://github.com/Gallopsled/pwntools/blob/dev/pwnlib/gdb.py)）
 - local（[pwnlib.tubes.process](https://github.com/Gallopsled/pwntools/blob/dev/pwnlib/tubes/process.py)）
-- remote（[pwnlib.tubes.remote](https://github.com/Gallopsled/pwntools/blob/dev/pwnlib/tubes/remote.py)）
-- ssh（[pwnlib.tubes.ssh](https://github.com/Gallopsled/pwntools/blob/dev/pwnlib/tubes/ssh.py)，推荐和 [pwn-env-docker](https://github.com/the-soloist/pwn-env-docker) 结合使用）
+- remote（[pwnlib.tubes.remote](https://github.com/Gallopsled/pwntools/blob/dev/pwnlib/tubes/remote.py)，可以搭配[debug-server](https://github.com/Ex-Origin/debug-server)进行远程调试
+- ssh（[pwnlib.tubes.ssh](https://github.com/Gallopsled/pwntools/blob/dev/pwnlib/tubes/ssh.py)，推荐和[pwn-env-docker](https://github.com/the-soloist/pwn-env-docker) 结合使用）
 - websocket（[websocket-client](https://github.com/websocket-client/websocket-client)）
+
+## TODO
+
+- [ ] 自动上传附件到 SSH，深度结合 pwn-env-docker
 
 ## ENV
 
