@@ -141,7 +141,7 @@ def encode(base: int, text: Union[bytes, str]):
     return encode_func(v2b(text))
 
 
-def decode(text: Union[bytes, str]):
+def decode(base: int, text: Union[bytes, str]):
     from pwnkit.lib.encode import base as base_functions
 
     decode_func = getattr(base_functions, f"b{base}decode")
@@ -157,7 +157,7 @@ def trans_encode(base: int, text: Union[bytes, str], table):
     return encode_func(v2b(text)).translate(bytes.maketrans(default_table[f"b{base}"], table))
 
 
-def trans_decode(text: Union[bytes, str], table):
+def trans_decode(base: int, text: Union[bytes, str], table):
     from pwnkit.lib.encode import base as base_functions
 
     decode_func = getattr(base_functions, f"b{base}decode")

@@ -43,12 +43,10 @@ def pwntube(args, force=None):
         from pwnkit.core.log import ulog
 
         if args.verbose == 1:
-            context.log_level = "debug"
-        elif args.verbose == 2:
             ulog.level("INFO")
-        elif args.verbose == 3:
+        elif args.verbose == 2:
             ulog.level("DEBUG")
-        else:
+        elif args.verbose >= 3:
             ulog.level("TRACE")
 
     # remote mode
@@ -118,7 +116,7 @@ def pwntube(args, force=None):
         if isinstance(args.env.cmd, list) and len(args.env.cmd) > 0:
             command = args.env.cmd
         else:
-            command = [args.info.binary.path]
+            command = [args.info.binary.path.encode()]
 
         delete_unexpected_keyword(args.env.kwargs, ["gdbscript"])
 

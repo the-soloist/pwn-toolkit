@@ -2,33 +2,43 @@
 # -*- coding: utf-8 -*-
 
 import os
-import subprocess
+import psutil
 
 
 def kill_pid(pid):
-    os.system(f"kill -9 {pid}")
+    try:
+        psutil.Process(pid).kill()
+    except:
+        pass
 
 
 def get_pid_by_name(name):
-    cmd = f"kill -9 $(pgrep {name})"  # ps aux | grep -v grep | grep qemu | awk '{print $2}'
-    subp = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    res = [x.decode() for x in subp.communicate() if x.decode()]
+    pid_list = []
+    for proc in psutil.process_iter(['pid', 'name']):
+        try:
+            if proc.info['name'] == name:
+                pid_list.append(proc.info["pid"])
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            pass
 
-    if len(res) == 0:
-        return None
-    else:
-        pid = [x for x in res[0].split('\n') if x]
-        return pid
+    return pid_list
+
+
+def kill_process_by_name(process_name):
+    for proc in psutil.process_iter(['pid', 'name']):
+        try:
+            if proc.info['name'] == process_name:
+                proc.kill()
+                print(f"Killed process {process_name} with PID {proc.info['pid']}")
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            pass
 
 
 def kill_process_by_name(name):
     from pwnkit.lib.log import plog
 
-    pid = get_pid_by_name(name)
+    pid_list = get_pid_by_name(name)
 
-    if pid is not None:
-        for p in pid:
-            kill_pid(p)
-        plog.info(f"kill {name} process, pid: {pid}")
-    else:
-        plog.warning(f"not found '{name}' process")
+    for p in pid_list:
+        kill_pid(p)
+    plog.info(f"kill {name} process, pid: {pid_list}")

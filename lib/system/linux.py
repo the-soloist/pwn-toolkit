@@ -3,8 +3,8 @@
 
 from pwn import ELF, asm
 
-from pwnkit.core.log import ulog
 from pwnkit.core.decorates import log_level
+from pwnkit.core.log import ulog
 
 
 @log_level("info")

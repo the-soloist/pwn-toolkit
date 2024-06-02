@@ -4,7 +4,7 @@
 import html
 import urllib
 
-from pwnkit.lib.convert.type2 import v2s, v2b
+from pwnkit.lib.convert.type2 import v2s, v2b, c2us
 
 
 def hex_encode(text) -> str:
@@ -33,7 +33,7 @@ def unicode_encode(text) -> str:
 
     res = list()
     for c in v2s(text):
-        res.append(f"\\u{char2unicode(c)}")
+        res.append(f"\\u{c2us(c)}")
 
     return "".join(res)
 

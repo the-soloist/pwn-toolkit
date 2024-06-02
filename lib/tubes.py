@@ -11,6 +11,7 @@ from pwnkit.core.log import ulog
 from pwnkit.lib.debug import tube_debug
 from pwnkit.lib.log import plog
 
+
 __all__ = [
     "websocket",
     "recv_pointer",
@@ -162,4 +163,4 @@ tube.sla = tube.sendlineafter
 if __name__ == "__main__":
     t = tube()
     t.recv_raw = lambda n: b"\x01\x02\x03\x04\x05\x06\xff\x7f\x56\xaa\xaaFoo\nBar\nBaz\nKaboodle\n"
-    r.rp([b"\x7f"])
+    t.rp([b"\x7f"])
