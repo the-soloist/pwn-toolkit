@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-from pwn import process, remote, gdb, log, pause, context
+from pwn import process, remote, gdb, log, context
 
 __all__ = [
     "pwntube"
@@ -129,6 +129,11 @@ def pwntube(args, force=None):
         Run with debug mode:
 
           >>> args.env.kwargs = {"gdbscript": GDB_SCRIPT, }
+
+          >>> # debug with qemu
+          >>> context.os = "baremetal"  # qemu-system
+          >>> args.env.kwargs = {"gdbscript": GDB_SCRIPT, "sysroot": "/path/to/sysroot"}
+          >>> args.env.kwargs = {"gdbscript": GDB_SCRIPT, "env": {b"QEMU_LD_PREFIX": "."}}
         """
 
         assert hasattr(args.env, "cmd")
@@ -138,8 +143,6 @@ def pwntube(args, force=None):
             command = args.env.cmd
         else:
             command = [args.info.binary.path]
-
-        delete_unexpected_keyword(args.env.kwargs, ["env"])
 
         io = gdb.debug(command, **args.env.kwargs)
         io.process_mode = "debug"

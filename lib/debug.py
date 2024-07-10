@@ -64,7 +64,7 @@ def init_debug_server(host="", connect=False, wait=1) -> tube:
         return None
 
 
-def tube_debug(_tube: tube, gdbscript="", gds: dict = {}, bpl: list = []):
+def tube_debug(_tube: tube, gdbscript="", gds: dict = {}, bpl: list = [], exe=None, gdb_args=None, ssh=None, sysroot=None, api=False):
     """
     Arguments:
       bpl: break point list
@@ -111,12 +111,12 @@ def tube_debug(_tube: tube, gdbscript="", gds: dict = {}, bpl: list = []):
             if option == DEBUG_SERVER.command_gdbserver_attach:
                 break
 
-        cmd = [gdb.binary(), "-q", "-ex", f"target remote {DEBUG_SERVER.host}:{DEBUG_SERVER.gdb_port}", "-x", script_path]
+        cmd = [gdb.binary(), "-q", "-ex", f"target remote {DEBUG_SERVER.host}:{DEBUG_SERVER.gdb_port}", "-x", script_path] + gdb_args
         misc.run_in_new_terminal(cmd)
         pause()
 
     else:
-        gdb.attach(_tube, scripts)
+        gdb.attach(_tube, scripts, exe=exe, gdb_args=gdb_args, ssh=ssh, sysroot=sysroot, api=api)
 
         if process_mode == "ssh":
             plog.waitfor(f"waiting remote process attached")
