@@ -18,6 +18,7 @@ from pwnkit.osys.linux.process import kill_process_by_name
 
 __all__ = [
     "DEFAULT_SPLITMIND_CONFIG",
+    "dbgsrv,"
     "init_debug_server",
     "tube_debug",
 ]
@@ -25,43 +26,89 @@ __all__ = [
 
 @dataclass
 class DebugServer:
-    host: str = "127.0.0.1"
-    cmd_port: int = 9545
-    gdb_port: int = 9549
-    sock: socket.socket = None
-    init: bool = False
+    is_init: bool = False
 
-    command_gdb_register: int = 0x01
-    command_gdbserver_attach: int = 0x02
-    command_gdb_logout: int = 0x05
+    HOST: str = "127.0.0.1"
+    SERVICE_PORT = 9541
+    COMMAND_PORT: int = 9545
+    GDBSERVER_PORT: int = 9549
+
+    COMMAND_GDB_REGISTER: int = 0x01
+    COMMAND_GDB_LOGOUT: int = 0x05
+    COMMAND_GDBSERVER_ATTACH: int = 0x02
+    COMMAND_STRACE_ATTACH: int = 0x03
+    COMMAND_GET_ADDRESS: int = 0x04
+    COMMAND_RUN_SERVICE: int = 0x06
+
+    def __del__(self):
+        self.logout()
+
+    def _sock_send_once(self, payload):
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)  # UDP
+        sock.sendto(payload, (self.HOST, self.COMMAND_PORT))
+        data, address = sock.recvfrom(0x1000)
+        sock.close()
+        return data, address
+
+    def init(self, host="", connect=False, wait=0) -> remote | tuple[str, int]:
+        """ 
+        Arguments:
+            host(str): set debug server host
+            connect(bool): connect to server port, usually for debug web server
+        """
+        if host:
+            self.HOST = host
+
+        kill_process_by_name("gdb")
+        kill_process_by_name("gdb-mutilarch")
+
+        self.register()
+        # plog.success(f"connect gdb with '{self.HOST}:{self.GDBSERVER_PORT}'")
+
+        if connect:
+            p = remote(self.HOST, self.SERVICE_PORT)
+            time.sleep(wait)
+            return p
+        else:
+            return self.HOST, self.SERVICE_PORT
+
+    def register(self):
+        self._sock_send_once(struct.pack("B", self.COMMAND_GDB_REGISTER))
+        self.is_init = True
+
+    def logout(self):
+        self._sock_send_once(struct.pack("B", self.COMMAND_GDB_LOGOUT))
+
+    def attach_gdbserver(self, gdb_scripts, gdb_args) -> int | None:
+        script_path = f"/tmp/empty_gdb_script"
+        open(script_path, "w").write(gdb_scripts)
+
+        data, _ = self._sock_send_once(struct.pack("BB", 0x02, len(script_path)) + script_path.encode())
+
+        option = struct.unpack("B", data[:1])[0]
+        assert option == self.COMMAND_GDBSERVER_ATTACH
+
+        cmd = [
+            gdb.binary(),
+            "-q",
+            "-ex", f"target remote {self.HOST}:{self.GDBSERVER_PORT}",
+            "-x", script_path
+        ] + gdb_args
+
+        return misc.run_in_new_terminal(cmd)
+
+    def attach_strace(self):
+        self._sock_send_once(struct.pack("B", self.COMMAND_STRACE_ATTACH))
+
+    def get_address(self, search_str):
+        data, _ = self._sock_send_once(struct.pack('BB', 0x04, len(search_str.encode())) + search_str.encode())
+        return data
+
+    def run_service(self):
+        self._sock_send_once(struct.pack("B", self.COMMAND_RUN_SERVICE))
 
 
-DEBUG_SERVER: DebugServer = DebugServer()
-
-
-def init_debug_server(host="", connect=False, wait=1) -> tube:
-    """ 
-    Arguments:
-        host(str): set debug server host
-        connect(bool): connect to server port, usually for debug web server
-    """
-    if host:
-        DEBUG_SERVER.host = host
-
-    kill_process_by_name("gdb")
-    kill_process_by_name("gdb-mutilarch")
-
-    DEBUG_SERVER.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)  # UDP
-    DEBUG_SERVER.sock.sendto(struct.pack("B", DEBUG_SERVER.command_gdb_register), (DEBUG_SERVER.host, DEBUG_SERVER.cmd_port))
-
-    DEBUG_SERVER.init = True
-
-    if connect:
-        p = remote("127.0.0.1", 9541)
-        time.sleep(wait)
-        return p
-    else:
-        return None
+dbgsrv: DebugServer = DebugServer()
 
 
 def tube_debug(_tube: tube, gdbscript="", gds: dict = {}, bpl: list = [], exe=None, gdb_args=None, ssh=None, sysroot=None, api=False):
@@ -76,12 +123,12 @@ def tube_debug(_tube: tube, gdbscript="", gds: dict = {}, bpl: list = [], exe=No
         process_mode = getattr(_tube, "process_mode")
 
     # pass remote mode
-    if process_mode and not DEBUG_SERVER.init:
+    if process_mode and not dbgsrv.is_init:
         if process_mode in ["remote", "websocket"]:
             plog.warning(f"not support debug in {process_mode} mode")
             return
         elif process_mode == "debug":
-            plog.warning(f"duplicate debug process")
+            plog.warning("duplicate debug process")
             return
 
     lines = list()
@@ -100,19 +147,8 @@ def tube_debug(_tube: tube, gdbscript="", gds: dict = {}, bpl: list = [], exe=No
 
     scripts = "\n".join(lines)
 
-    if process_mode in ["remote", "websocket"] and DEBUG_SERVER.init:
-        script_path = f"/tmp/empty_gdb_script"
-        open(script_path, "w").write(scripts)
-        DEBUG_SERVER.sock.sendto(struct.pack("BB", 0x02, len(script_path)) + script_path.encode(), (DEBUG_SERVER.host, DEBUG_SERVER.cmd_port))
-
-        while True:
-            data, _ = DEBUG_SERVER.sock.recvfrom(4096)
-            option = struct.unpack("B", data[:1])[0]
-            if option == DEBUG_SERVER.command_gdbserver_attach:
-                break
-
-        cmd = [gdb.binary(), "-q", "-ex", f"target remote {DEBUG_SERVER.host}:{DEBUG_SERVER.gdb_port}", "-x", script_path] + gdb_args
-        misc.run_in_new_terminal(cmd)
+    if process_mode in ["remote", "websocket"] and dbgsrv.is_init:
+        dbgsrv.attach_gdbserver(scripts, gdb_args)
         pause()
 
     else:

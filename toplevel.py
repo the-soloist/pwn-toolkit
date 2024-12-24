@@ -8,7 +8,7 @@ from pwnkit.core.config import init_pwn_args
 
 from pwnkit import lib
 from pwnkit.lib.convert import type2
-from pwnkit.lib.debug import init_debug_server
+from pwnkit.lib.debug import dbgsrv
 from pwnkit.lib.entry import pwntube
 from pwnkit.lib.log import plog, tlog
 from pwnkit.lib.tubes import *
