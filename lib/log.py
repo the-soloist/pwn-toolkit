@@ -11,8 +11,10 @@ from tqdm import tqdm
 from pwnkit.core import color
 
 __all__ = [
-    "PwnLogger", "plog",
-    "TqdmLogger", "tlog"
+    "PwnLogger",
+    "plog",
+    "TqdmLogger",
+    "tlog",
 ]
 
 
@@ -139,9 +141,9 @@ if __name__ == "__main__":
     # import ipdb
     # ipdb.set_trace()
 
-    plog.address(test=0xdeadbeef)
-    plog.value(test=0xdeadbeef)
-    plog.value(False, test=0xdeadbeef)
+    plog.address(test=0xDEADBEEF)
+    plog.value(test=0xDEADBEEF)
+    plog.value(False, test=0xDEADBEEF)
     plog.msg("test", "message")
 
     plog.info("test")
@@ -154,9 +156,9 @@ if __name__ == "__main__":
     except:
         pass
 
-    tlog.address(test=0xdeadbeef)
-    tlog.value(test=0xdeadbeef)
-    tlog.value(False, test=0xdeadbeef)
+    tlog.address(test=0xDEADBEEF)
+    tlog.value(test=0xDEADBEEF)
+    tlog.value(False, test=0xDEADBEEF)
     tlog.msg("test", "test message")
 
     tlog.info("test")

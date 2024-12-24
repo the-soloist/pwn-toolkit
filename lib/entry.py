@@ -5,7 +5,7 @@ import os
 from pwn import process, remote, gdb, log, context
 
 __all__ = [
-    "pwntube"
+    "pwntube",
 ]
 
 
@@ -18,7 +18,7 @@ def delete_unexpected_keyword(arg, klist):
 
 
 def pwntube(args, force=None):
-    """ 
+    """
     Arguments:
         force(str):
             force run in choosen mode
@@ -149,6 +149,7 @@ def pwntube(args, force=None):
 
     else:
         from pwnkit import parser
+
         parser.print_help()
         exit(0)
 

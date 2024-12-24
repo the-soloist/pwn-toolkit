@@ -59,7 +59,7 @@ class websocket(tube):
 
         if not data:
             self.shutdown()
-            raise EOFError('Recv Error')
+            raise EOFError("Recv Error")
 
         return data
 
@@ -71,10 +71,10 @@ class websocket(tube):
             self.sock.send_binary(data)
         except WebSocketException as e:
             self.shutdown()
-            raise EOFError('Send Error')
+            raise EOFError("Send Error")
 
     def settimeout_raw(self, timeout):
-        if getattr(self, 'sock', None):
+        if getattr(self, "sock", None):
             self.sock.settimeout(timeout)
 
     def connected_raw(self, direction):
@@ -86,7 +86,7 @@ class websocket(tube):
             return False
 
     def close(self):
-        if not getattr(self, 'sock', None):
+        if not getattr(self, "sock", None):
             return
 
         self.closed = True
@@ -96,7 +96,7 @@ class websocket(tube):
         self._close_msg()
 
     def _close_msg(self):
-        self.info('Closed connection to %s', self.url)
+        self.info("Closed connection to %s", self.url)
 
     def shutdown_raw(self, direction):
         if self.closed:
@@ -136,9 +136,9 @@ def cat_flag(io: tube, path="flag", prefix="flag"):
     return recv_flag(io, prefix)
 
 
-def recv_flag(io, prefix="flag"):
+def recv_flag(io: tube, prefix="flag"):
     io.recvuntil(f"{prefix}{{".encode())
-    content = io.ru(b"}", drop=True).decode()
+    content = io.recvuntil(b"}", drop=True).decode()
     flag = "flag{%s}" % content
 
     ulog.info(f"recv flag content: {flag}")

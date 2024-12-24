@@ -8,7 +8,7 @@ from pwnkit.core.log import ulog
 
 __all__ = [
     "log_level",
-    "use_pwnio"
+    "use_pwnio",
 ]
 
 
@@ -23,15 +23,19 @@ def log_level(level):
             res = func(*a, **k)
             context.log_level = old_log_level
             return res
+
         return wrapper
+
     return dector
 
 
 def use_pwnio(func):
-    ulog.debug(f"set pwn io`")
+    ulog.debug("set pwn io")
 
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         from pwnkit import pwnobj
+
         return func(pwnobj.io, *args, **kwargs)
+
     return wrapper

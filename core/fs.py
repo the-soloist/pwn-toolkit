@@ -5,7 +5,7 @@ from pathlib import Path
 
 __all__ = [
     "mkdir_s",
-    "touch_s"
+    "touch_s",
 ]
 
 
