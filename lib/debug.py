@@ -26,7 +26,7 @@ __all__ = [
 
 @dataclass
 class DebugServer:
-    is_init: bool = False
+    is_register: bool = False
 
     HOST: str = "127.0.0.1"
     SERVICE_PORT = 9541
@@ -74,7 +74,7 @@ class DebugServer:
 
     def register(self):
         self._sock_send_once(struct.pack("B", self.COMMAND_GDB_REGISTER))
-        self.is_init = True
+        self.is_register = True
 
     def logout(self):
         self._sock_send_once(struct.pack("B", self.COMMAND_GDB_LOGOUT))
@@ -123,7 +123,7 @@ def tube_debug(_tube: tube, gdbscript="", gds: dict = {}, bpl: list = [], exe=No
         process_mode = getattr(_tube, "process_mode")
 
     # pass remote mode
-    if process_mode and not dbgsrv.is_init:
+    if process_mode and not dbgsrv.is_register:
         if process_mode in ["remote", "websocket"]:
             plog.warning(f"not support debug in {process_mode} mode")
             return
@@ -147,7 +147,7 @@ def tube_debug(_tube: tube, gdbscript="", gds: dict = {}, bpl: list = [], exe=No
 
     scripts = "\n".join(lines)
 
-    if process_mode in ["remote", "websocket"] and dbgsrv.is_init:
+    if process_mode in ["remote", "websocket"] and dbgsrv.is_register:
         dbgsrv.attach_gdbserver(scripts, gdb_args)
         pause()
 
