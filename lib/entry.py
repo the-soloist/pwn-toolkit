@@ -4,6 +4,7 @@
 import os
 from pwn import process, remote, gdb, log, context
 
+
 __all__ = [
     "pwntube",
 ]
@@ -73,7 +74,7 @@ def pwntube(args, force=None):
         if isinstance(args.env.cmd, list) and len(args.env.cmd) > 0:
             command = args.env.cmd
         else:
-            command = [args.info.binary.path]
+            command = [os.path.basename(args.info.binary.path)]
 
         io = args.env.ssh.process(command, **args.env.kwargs)
         io.process_mode = "ssh"

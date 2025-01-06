@@ -77,10 +77,11 @@ class DebugServer:
         self.is_register = True
 
     def logout(self):
-        self._sock_send_once(struct.pack("B", self.COMMAND_GDB_LOGOUT))
+        if self.is_register:
+            self._sock_send_once(struct.pack("B", self.COMMAND_GDB_LOGOUT))
 
-    def attach_gdbserver(self, gdb_scripts, gdb_args) -> int | None:
-        script_path = f"/tmp/empty_gdb_script"
+    def attach_gdbserver(self, gdb_scripts="", gdb_args=[]) -> int | None:
+        script_path = f"/tmp/temp_gdb_script"
         open(script_path, "w").write(gdb_scripts)
 
         data, _ = self._sock_send_once(struct.pack("BB", 0x02, len(script_path)) + script_path.encode())
@@ -111,7 +112,7 @@ class DebugServer:
 dbgsrv: DebugServer = DebugServer()
 
 
-def tube_debug(_tube: tube, gdbscript="", gds: dict = {}, bpl: list = [], exe=None, gdb_args=None, ssh=None, sysroot=None, api=False):
+def tube_debug(_tube: tube, gdbscript="", gds: dict = {}, bpl: list = [], exe=None, gdb_args=[], ssh=None, sysroot=None, api=False):
     """
     Arguments:
       bpl: break point list
