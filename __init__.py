@@ -7,7 +7,7 @@ autopwn = pwn_the_world = pwntube  # XD
 parser = core.config.init_parser()
 
 # init
-GDS = {}
-BPL = []
+GDB_DEBUG_SYMBOLS = {}
+GDB_BREAKPOINTS = []
 GDB_SCRIPT = ""
 pwnobj = core.classes.EmptyClass()

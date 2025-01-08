@@ -112,12 +112,8 @@ class DebugServer:
 dbgsrv: DebugServer = DebugServer()
 
 
-def tube_debug(target, gdbscript="", gds: dict = {}, bpl: list = [], exe=None, gdb_args=[], ssh=None, sysroot=None, api=False):
-    """
-    Arguments:
-      bpl: break point list
-      gds: gdb debug symbols
-    """
+def tube_debug(target, gdbscript="", gdb_debug_symbols: dict = {}, gdb_breakpoints: list = [],
+               exe=None, gdb_args=[], ssh=None, sysroot=None, api=False):
 
     if not isinstance(target, tube):
         gdb.attach(target, gdbscript, exe=exe, gdb_args=gdb_args, ssh=ssh, sysroot=sysroot, api=api)
@@ -138,12 +134,12 @@ def tube_debug(target, gdbscript="", gds: dict = {}, bpl: list = [], exe=None, g
     lines = list()
 
     # add gdb debug symbols
-    for k, v in gds.items():
+    for k, v in gdb_debug_symbols.items():
         s = "set ${k}={v}".format(k=k, v=str(v))
         lines.append(s)
 
     # add break point list
-    for b in bpl:
+    for b in gdb_breakpoints:
         s = "b *{b}".format(b=str(b))
         lines.append(s)
 
