@@ -112,16 +112,19 @@ class DebugServer:
 dbgsrv: DebugServer = DebugServer()
 
 
-def tube_debug(_tube: tube, gdbscript="", gds: dict = {}, bpl: list = [], exe=None, gdb_args=[], ssh=None, sysroot=None, api=False):
+def tube_debug(target, gdbscript="", gds: dict = {}, bpl: list = [], exe=None, gdb_args=[], ssh=None, sysroot=None, api=False):
     """
     Arguments:
       bpl: break point list
       gds: gdb debug symbols
     """
 
+    if not isinstance(target, tube):
+        gdb.attach(target, gdbscript, exe=exe, gdb_args=gdb_args, ssh=ssh, sysroot=sysroot, api=api)
+
     process_mode = None
-    if hasattr(_tube, "process_mode"):
-        process_mode = getattr(_tube, "process_mode")
+    if hasattr(target, "_process_mode"):
+        process_mode = getattr(target, "_process_mode")
 
     # pass remote mode
     if process_mode and not dbgsrv.is_register:
@@ -153,7 +156,7 @@ def tube_debug(_tube: tube, gdbscript="", gds: dict = {}, bpl: list = [], exe=No
         pause()
 
     else:
-        gdb.attach(_tube, scripts, exe=exe, gdb_args=gdb_args, ssh=ssh, sysroot=sysroot, api=api)
+        gdb.attach(target, scripts, exe=exe, gdb_args=gdb_args, ssh=ssh, sysroot=sysroot, api=api)
 
         if process_mode == "ssh":
             plog.waitfor(f"waiting remote process attached")

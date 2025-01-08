@@ -54,7 +54,7 @@ def pwntube(args, force=None):
     if args.remote:
         """ args.info.target = {"host": "example.server", "port": 9999} """
         io = remote(**args.info.target)
-        io.process_mode = "remote"
+        io._process_mode = "remote"
 
     # websocket mode
     elif args.websocket:
@@ -62,7 +62,7 @@ def pwntube(args, force=None):
         from pwnkit.lib.tubes import websocket
 
         io = websocket(**args.info.target)
-        io.process_mode = "websocket"
+        io._process_mode = "websocket"
 
     elif args.ssh:
         from pwnlib.tubes.ssh import ssh as SSH
@@ -77,7 +77,7 @@ def pwntube(args, force=None):
             command = [os.path.basename(args.info.binary.path)]
 
         io = args.env.ssh.process(command, **args.env.kwargs)
-        io.process_mode = "ssh"
+        io._process_mode = "ssh"
 
     # local mode
     elif args.local:
@@ -122,7 +122,7 @@ def pwntube(args, force=None):
         delete_unexpected_keyword(args.env.kwargs, ["gdbscript"])
 
         io = process(command, **args.env.kwargs)
-        io.process_mode = "local"
+        io._process_mode = "local"
 
     # debug mode
     elif args.debug:
@@ -146,7 +146,7 @@ def pwntube(args, force=None):
             command = [args.info.binary.path]
 
         io = gdb.debug(command, **args.env.kwargs)
-        io.process_mode = "debug"
+        io._process_mode = "debug"
 
     else:
         from pwnkit import parser
