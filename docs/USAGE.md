@@ -20,7 +20,7 @@ GDB_SCRIPT = """ """
 
 p = pwntube(args)
 
-# p.dbg(GDB_SCRIPT)
+# gift.gdb_debug(p, GDB_SCRIPT, GDS, BPL)
 p.interactive()
 p.close()
 ```
