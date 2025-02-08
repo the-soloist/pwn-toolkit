@@ -4,8 +4,6 @@
 
 import struct
 
-from pwnkit.lib.log import plog
-
 
 def uint8(n):
     return n & 0xff
@@ -105,3 +103,16 @@ class Number(object):
                 print("float:        ", Number.h2float(self.n, self.bits))
             elif self.bits == 64:
                 print("double:       ", Number.h2double(self.n, self.bits))
+
+
+class Integer(object):
+    def unsigned2signed(unsigned_num) -> int:
+        unsigned_bytes = int.to_bytes(unsigned_num, 4, "little")
+        unsigned_int = struct.unpack("I", unsigned_bytes)[0]
+        signed_int = struct.unpack("i", struct.pack("I", unsigned_int))[0]
+        return signed_int
+
+    def signed2unsigned(signed_num) -> int:
+        signed_bytes = struct.pack("<i", signed_num)
+        unsigned_int = struct.unpack("<I", signed_bytes)[0]
+        return unsigned_int

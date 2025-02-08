@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-from pwn import process, remote, gdb, log, context
-
+from pwn import process, remote, gdb, log
 
 __all__ = [
     "pwntube",
@@ -31,13 +30,6 @@ def pwntube(args, force=None):
         """ io = pwntube(args, force="remote") """
         log.info(f"set {force} mode")
         setattr(args, force, True)
-
-    # set context.terminal
-    if os.getenv("TMUX"):
-        if len(context.terminal) == 0:
-            split_horizon = os.get_terminal_size().columns - 89
-            context.terminal = ["tmux", "sp", "-h", "-l", str(split_horizon)]
-            log.debug(f"set `context.terminal = {str(context.terminal)}`")
 
     # set log level
     if args.verbose:

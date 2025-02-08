@@ -15,7 +15,6 @@ from pwnlib.util import misc
 from pwnkit.lib.log import plog
 from pwnkit.osys.linux.process import kill_process_by_name
 
-
 __all__ = [
     "DEFAULT_SPLITMIND_CONFIG",
     "dbgsrv,"
@@ -29,9 +28,9 @@ class DebugServer:
     is_register: bool = False
 
     HOST: str = "127.0.0.1"
-    SERVICE_PORT = 9541
-    COMMAND_PORT: int = 9545
-    GDBSERVER_PORT: int = 9549
+    SERVICE_PORT = 9541  # custom protocal
+    COMMAND_PORT: int = 9545  # udp
+    GDBSERVER_PORT: int = 9549  # tcp
 
     COMMAND_GDB_REGISTER: int = 0x01
     COMMAND_GDB_LOGOUT: int = 0x05
@@ -147,7 +146,7 @@ def tube_debug(target, gdbscript="", gdb_debug_symbols: dict = {}, gdb_breakpoin
 
     scripts = "\n".join(lines)
 
-    if process_mode in ["remote", "websocket"] and dbgsrv.is_register:
+    if process_mode not in ["remote", "websocket"] and dbgsrv.is_register:
         dbgsrv.attach_gdbserver(scripts, gdb_args)
         pause()
 

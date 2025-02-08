@@ -3,6 +3,7 @@
 
 import argparse
 import configparser
+import os
 from pathlib import Path
 
 from pwnkit.core.classes import ArgInfo, ArgEnv
@@ -20,7 +21,18 @@ SETTING = configparser.ConfigParser()
 SETTING.read(PU_HOME / "setting.ini")
 
 
-def init_pwn_args(parser=None):
+def config_context_termianl():
+    from pwn import context, log
+
+    # set context.terminal
+    if os.getenv("TMUX"):
+        if len(context.terminal) == 0:
+            split_horizon = os.get_terminal_size().columns - 89
+            context.terminal = ["tmux", "sp", "-h", "-l", str(split_horizon)]
+            log.debug(f"set `context.terminal = {str(context.terminal)}`")
+
+
+def init_pwn_args(parser=None):    
     if not parser:
         parser = init_parser()
 
@@ -28,6 +40,8 @@ def init_pwn_args(parser=None):
     args.force = None
     args.info = ArgInfo()
     args.env = ArgEnv()
+
+    config_context_termianl()
 
     return args
 
