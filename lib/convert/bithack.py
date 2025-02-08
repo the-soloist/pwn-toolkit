@@ -1,34 +1,38 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# edit from https://xuanxuanblingbling.github.io/ctf/tools/2021/01/10/bu/
 
 import struct
+from typing import Union, Dict, Optional
 
 
-def uint8(n):
+def uint8(n: int) -> int:
     return n & 0xff
 
 
-def uint16(n):
+def uint16(n: int) -> int:
     return n & 0xffff
 
 
-def uint32(n):
+def uint32(n: int) -> int:
     return n & 0xffffffff
 
 
-def uint64(n):
+def uint64(n: int) -> int:
     return n & 0xffffffffffffffff
 
 
-def uintX(n, bits):
-    """ uint: unsigned int """
+def uintX(n: int, bits: int) -> int:
+    """Unsigned integer with specified bit length"""
     return n & ((1 << bits) - 1)
 
 
-def sintX(n, bits):
-    """ sint: signed int """
-    pass
+def sintX(n: int, bits: int) -> int:
+    """Convert a number to signed integer with specified bit length"""
+    mask = (1 << bits) - 1
+    sign_bit = 1 << (bits - 1)
+    if n & sign_bit:  # If sign bit is set
+        return n | ~mask  # Extend sign bits
+    return n & mask  # Positive number
 
 
 def float2hex(f: float) -> int:
@@ -47,17 +51,19 @@ def hex2double(n: int) -> float:
     return struct.unpack("<d", struct.pack("<Q", n))[0]
 
 
-class Number(object):
-    def __init__(self, n, bits, ntype=None):
+class Number:
+    """Class for handling numbers with different bit lengths and types"""
+
+    def __init__(self, n: Union[int, float], bits: int, ntype: Optional[str] = None):
         self.n = n
-        self.num = None
+        self.num: Optional[int] = None
         self.ntype = ntype
         self.bits = bits
-        self.nrange = dict()
+        self.nrange: Dict[str, int] = {}
         self.check()
 
-    def check(self):
-        assert self.bits % 8 == 0
+    def check(self) -> None:
+        assert self.bits % 8 == 0, "Bit length must be multiple of 8"
 
         if not self.ntype:
             self.ntype = type(self.n).__name__
@@ -68,51 +74,58 @@ class Number(object):
         self.nrange["max_signed"] = 1 << self.bits - 1
         self.nrange["max_unsigned"] = (1 << self.bits - 1) - 1
 
-        self.num = Number.n2int(self.n, self.bits)
+        self.num = self.n2int(self.n, self.bits)
 
-    def n2int(n, bits):
-        assert bits % 8 == 0
-        if type(n) == int:  # int
+    @staticmethod
+    def n2int(n: Union[int, float], bits: int) -> int:
+        assert bits % 8 == 0, "Bit length must be multiple of 8"
+        if isinstance(n, int):
             return uintX(n, bits)
-        elif type(n) == float and bits == 32:  # float
-            return float2hex(n)
-        elif type(n) == float and bits == 64:  # double
-            return double2hex(n)
+        elif isinstance(n, float):
+            if bits == 32:
+                return float2hex(n)
+            elif bits == 64:
+                return double2hex(n)
+        raise ValueError("Unsupported number type")
 
-    def h2float(n, bits):
-        assert bits <= 32 and bits % 8 == 0
+    @staticmethod
+    def h2float(n: int, bits: int) -> float:
+        assert bits <= 32 and bits % 8 == 0, "Bit length must be <= 32 and multiple of 8"
         return hex2float(n)
 
-    def h2double(n, bits):
-        assert bits <= 64 and bits % 8 == 0
+    @staticmethod
+    def h2double(n: int, bits: int) -> float:
+        assert bits <= 64 and bits % 8 == 0, "Bit length must be <= 64 and multiple of 8"
         return hex2double(n)
 
-    def show(self):
-        print("input:        ", self.n)
-        print("hex:          ", hex(self.num))
-        print("bin:          ", bin(self.num))
+    def show(self) -> None:
+        """Display number information in a formatted way"""
+        print(f"Input:        {self.n}")
+        print(f"Hex:          {hex(self.num)}")
+        print(f"Binary:       {bin(self.num)}")
         print("--------------------------------------------------")
-        print("bits:         ", self.bits)
-        print("min signed:   ", hex(self.nrange["min_signed"]), self.nrange["min_signed"])
-        print("max signed:   ", hex(self.nrange["max_signed"]), self.nrange["max_signed"])
-        print("max unsigned: ", hex(self.nrange["max_unsigned"]), self.nrange["max_unsigned"])
+        print(f"Bits:         {self.bits}")
+        print(f"Min signed:   {hex(self.nrange['min_signed'])} ({self.nrange['min_signed']})")
+        print(f"Max signed:   {hex(self.nrange['max_signed'])} ({self.nrange['max_signed']})")
+        print(f"Max unsigned: {hex(self.nrange['max_unsigned'])} ({self.nrange['max_unsigned']})")
 
         if self.ntype == "hex":
             print("--------------------------------------------------")
             if self.bits == 32:
-                print("float:        ", Number.h2float(self.n, self.bits))
+                print(f"Float:        {self.h2float(self.n, self.bits)}")
             elif self.bits == 64:
-                print("double:       ", Number.h2double(self.n, self.bits))
+                print(f"Double:       {self.h2double(self.n, self.bits)}")
 
 
-class Integer(object):
-    def unsigned2signed(unsigned_num) -> int:
-        unsigned_bytes = int.to_bytes(unsigned_num, 4, "little")
-        unsigned_int = struct.unpack("I", unsigned_bytes)[0]
-        signed_int = struct.unpack("i", struct.pack("I", unsigned_int))[0]
-        return signed_int
+class Integer:
+    """Utility class for integer conversions"""
 
-    def signed2unsigned(signed_num) -> int:
-        signed_bytes = struct.pack("<i", signed_num)
-        unsigned_int = struct.unpack("<I", signed_bytes)[0]
-        return unsigned_int
+    @staticmethod
+    def unsigned2signed(unsigned_num: int) -> int:
+        """Convert unsigned integer to signed integer"""
+        return struct.unpack("i", struct.pack("I", unsigned_num))[0]
+
+    @staticmethod
+    def signed2unsigned(signed_num: int) -> int:
+        """Convert signed integer to unsigned integer"""
+        return struct.unpack("<I", struct.pack("<i", signed_num))[0]
