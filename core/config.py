@@ -24,15 +24,19 @@ SETTING.read(PU_HOME / "setting.ini")
 def config_context_termianl():
     from pwn import context, log
 
-    # set context.terminal
+    # Skip if terminal already configured
+    if context.terminal:
+        log.debug(f"context.terminal already set to: {context.terminal}")
+        return
+
+    # Set `context.terminal`
     if os.getenv("TMUX"):
-        if len(context.terminal) == 0:
-            split_horizon = os.get_terminal_size().columns - 89
-            context.terminal = ["tmux", "sp", "-h", "-l", str(split_horizon)]
-            log.debug(f"set `context.terminal = {str(context.terminal)}`")
+        split_horizon = os.get_terminal_size().columns - 89
+        context.terminal = ["tmux", "sp", "-h", "-l", str(split_horizon)]
+        log.debug(f"Set context.terminal for tmux: {context.terminal}")
 
 
-def init_pwn_args(parser=None):    
+def init_pwn_args(parser=None):
     if not parser:
         parser = init_parser()
 
