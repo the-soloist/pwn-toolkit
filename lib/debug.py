@@ -117,11 +117,8 @@ def tube_debug(target, gdbscript="", gdb_debug_symbols: dict = {}, gdb_breakpoin
     if not isinstance(target, tube):
         gdb.attach(target, gdbscript, exe=exe, gdb_args=gdb_args, ssh=ssh, sysroot=sysroot, api=api)
 
-    process_mode = None
-    if hasattr(target, "_process_mode"):
-        process_mode = getattr(target, "_process_mode")
+    process_mode = getattr(target, "_process_mode", None)
 
-    # pass remote mode
     if process_mode and not dbgsrv.is_register:
         if process_mode in ["remote", "websocket"]:
             plog.warning(f"not support debug in {process_mode} mode")
@@ -130,18 +127,8 @@ def tube_debug(target, gdbscript="", gdb_debug_symbols: dict = {}, gdb_breakpoin
             plog.warning("duplicate debug process")
             return
 
-    lines = list()
-
-    # add gdb debug symbols
-    for k, v in gdb_debug_symbols.items():
-        s = "set ${k}={v}".format(k=k, v=str(v))
-        lines.append(s)
-
-    # add break point list
-    for b in gdb_breakpoints:
-        s = "b *{b}".format(b=str(b))
-        lines.append(s)
-
+    lines = [f"set ${k}={v}" for k, v in gdb_debug_symbols.items()]
+    lines.extend(f"b *{b}" for b in gdb_breakpoints)
     lines.append(gdbscript)
 
     scripts = "\n".join(lines)
@@ -149,12 +136,10 @@ def tube_debug(target, gdbscript="", gdb_debug_symbols: dict = {}, gdb_breakpoin
     if process_mode not in ["remote", "websocket"] and dbgsrv.is_register:
         dbgsrv.attach_gdbserver(scripts, gdb_args)
         pause()
-
     else:
         gdb.attach(target, scripts, exe=exe, gdb_args=gdb_args, ssh=ssh, sysroot=sysroot, api=api)
-
         if process_mode == "ssh":
-            plog.waitfor(f"waiting remote process attached")
+            plog.waitfor("waiting remote process attached")
             pause()
 
 
