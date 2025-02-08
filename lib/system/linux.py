@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pwn import ELF, asm, context
+from pwn import ELF, asm
 
 from pwnkit.core.decorates import log_level
 from pwnkit.core.log import ulog
