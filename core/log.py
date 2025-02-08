@@ -41,8 +41,8 @@ logfile_fmt = (
 logger.remove()
 
 # logger.remove(handler_id=None)  # 控制台静默运行
-logger.add(sys.stderr, level="ERROR", format=stdout_fmt, enqueue=True)  # 命令终端日志级别默认为 INFO
-logger.add(log_path, level="TRACE", format=logfile_fmt, enqueue=True, encoding="utf-8")  # 日志文件默认为级别为 TRACE
+logger.add(sys.stderr, level="ERROR", format=stdout_fmt, enqueue=True)  # 命令终端日志级别默认为ERROR
+logger.add(log_path, level="TRACE", format=logfile_fmt, enqueue=True, encoding="utf-8")  # 日志文件默认为级别为TRACE
 
 
 if __name__ == "__main__":

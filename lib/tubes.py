@@ -107,40 +107,34 @@ class websocket(tube):
 
 
 def recv_pointer(io: tube, delims=None, off=6, name=None, byteorder="little", **kwargs):
-    if not delims:
-        delims = default_delims[name]
+    delims = delims or default_delims.get(name)
 
     res = io.recvuntil(delims, **kwargs)
+    addr = int.from_bytes(res[-off:], byteorder=byteorder) if res else None
 
-    if res:
-        addr = int.from_bytes(res[-off:], byteorder=byteorder)
+    if addr is not None:
         plog.debug(f"found pointer: {hex(addr)}")
     else:
-        addr = None
         plog.warning(f"no pointers with the prefix {delims} found")
 
     return addr
 
 
 def run_command(io, cmd):
-    ulog.info(f"run command: {cmd}")
-
-    if isinstance(cmd, str):
-        cmd = cmd.encode()
-
-    io.sendline(cmd)
+    cmd_bytes = cmd.encode() if isinstance(cmd, str) else cmd
+    ulog.info(f"run command: {cmd_bytes.decode()}")
+    io.sendline(cmd_bytes)
 
 
 def cat_flag(io: tube, path="flag", prefix="flag"):
-    run_command(io, f"cat {path}".encode())
+    run_command(io, f"cat {path}")
     return recv_flag(io, prefix)
 
 
 def recv_flag(io: tube, prefix="flag"):
     io.recvuntil(f"{prefix}{{".encode())
     content = io.recvuntil(b"}", drop=True).decode()
-    flag = "flag{%s}" % content
-
+    flag = f"flag{{{content}}}"
     ulog.info(f"recv flag content: {flag}")
     return flag
 

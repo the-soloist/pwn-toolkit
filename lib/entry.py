@@ -2,22 +2,43 @@
 # -*- coding: utf-8 -*-
 
 import os
+from argparse import Namespace
 from pwn import process, remote, gdb, log
+from typing import Union
+
+from pwnkit.core.log import ulog
+
 
 __all__ = [
     "pwntube",
 ]
 
 
-def delete_unexpected_keyword(arg, klist):
+def _validate_env(args: Namespace):
+    assert hasattr(args.env, "cmd"), "Missing args.env.cmd"
+    assert hasattr(args.env, "kwargs"), "Missing args.env.kwargs"
+
+
+def _get_command(args: Namespace, default_cmd):
+    assert isinstance(args.env.cmd, list)
+    if len(args.env.cmd) > 0:
+        return args.env.cmd
+    return [default_cmd]
+
+
+def _get_command(args: Namespace, default_cmd: Union[str, list]) -> list:
+    """Get command list from args or use default command"""
+    assert isinstance(args.env.cmd, list), "args.env.cmd must be a list"
+    return args.env.cmd if args.env.cmd else [default_cmd]
+
+
+def _delete_unexpected_keyword(arg: dict, klist: list[str]) -> None:
+    """Safely remove unexpected keys from a dictionary"""
     for k in klist:
-        try:
-            arg.pop(k)
-        except:
-            pass
+        arg.pop(k, None)
 
 
-def pwntube(args, force=None):
+def pwntube(args: Namespace, force=None):
     """
     Arguments:
         force(str):
@@ -33,14 +54,12 @@ def pwntube(args, force=None):
 
     # set log level
     if args.verbose:
-        from pwnkit.core.log import ulog
-
-        if args.verbose == 1:
-            ulog.level("INFO")
-        elif args.verbose == 2:
-            ulog.level("DEBUG")
-        elif args.verbose >= 3:
-            ulog.level("TRACE")
+        log_levels = {
+            1: "INFO",
+            2: "DEBUG",
+            3: "TRACE"
+        }
+        ulog.level(log_levels.get(args.verbose, "ERROR"))
 
     # remote mode
     if args.remote:
@@ -56,24 +75,21 @@ def pwntube(args, force=None):
         io = websocket(**args.info.target)
         io._process_mode = "websocket"
 
+    # ssh mode
     elif args.ssh:
         from pwnlib.tubes.ssh import ssh as SSH
 
-        assert hasattr(args.env, "cmd")
-        assert hasattr(args.env, "kwargs")
+        _validate_env(args)
         assert isinstance(args.env.ssh, SSH)
 
-        if isinstance(args.env.cmd, list) and len(args.env.cmd) > 0:
-            command = args.env.cmd
-        else:
-            command = [os.path.basename(args.info.binary.path)]
+        command = _get_command(args, os.path.basename(args.info.binary.path))
 
         io = args.env.ssh.process(command, **args.env.kwargs)
         io._process_mode = "ssh"
 
     # local mode
     elif args.local:
-        """ 
+        """
         Run with local mode:
 
           >>> io = process([ld.path, binary.path], env={"LD_PRELOAD": libc.path})
@@ -82,7 +98,7 @@ def pwntube(args, force=None):
           >>> args.env.cmd = [ld.path, binary.path]
           >>> args.env.kwargs = { "env": {"LD_PRELOAD": "/path/to/libc.so"}, }
 
-        Start with qemu: 
+        Start with qemu:
         1. append gdb script:
             ```
             GDB_SCRIPT += "file /path/to/binary"
@@ -103,15 +119,11 @@ def pwntube(args, force=None):
           qemu-mips -g 9999 -L . /path/to/binary
         """
 
-        assert hasattr(args.env, "cmd")
-        assert hasattr(args.env, "kwargs")
+        _validate_env(args)
 
-        if isinstance(args.env.cmd, list) and len(args.env.cmd) > 0:
-            command = args.env.cmd
-        else:
-            command = [args.info.binary.path.encode()]
+        command = _get_command(args, args.info.binary.path)
 
-        delete_unexpected_keyword(args.env.kwargs, ["gdbscript"])
+        _delete_unexpected_keyword(args.env.kwargs, ["gdbscript"])
 
         io = process(command, **args.env.kwargs)
         io._process_mode = "local"
@@ -132,10 +144,7 @@ def pwntube(args, force=None):
         assert hasattr(args.env, "cmd")
         assert hasattr(args.env, "kwargs")
 
-        if isinstance(args.env.cmd, list) and len(args.env.cmd) > 0:
-            command = args.env.cmd
-        else:
-            command = [args.info.binary.path]
+        command = _get_command(args, args.info.binary.path)
 
         io = gdb.debug(command, **args.env.kwargs)
         io._process_mode = "debug"

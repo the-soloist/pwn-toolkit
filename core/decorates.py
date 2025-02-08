@@ -7,12 +7,12 @@ from pwn import log, context
 from pwnkit.core.log import ulog
 
 __all__ = [
-    "log_level",
+    "with_log_level",
     "use_pwnio",
 ]
 
 
-def log_level(level):
+def with_log_level(level):
     ulog.debug(f"set pwnlog level to '{level}'")
 
     def dector(func):
