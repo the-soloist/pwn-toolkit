@@ -19,13 +19,6 @@ def _validate_env(args: Namespace):
     assert hasattr(args.env, "kwargs"), "Missing args.env.kwargs"
 
 
-def _get_command(args: Namespace, default_cmd):
-    assert isinstance(args.env.cmd, list)
-    if len(args.env.cmd) > 0:
-        return args.env.cmd
-    return [default_cmd]
-
-
 def _get_command(args: Namespace, default_cmd: Union[str, list]) -> list:
     """Get command list from args or use default command"""
     assert isinstance(args.env.cmd, list), "args.env.cmd must be a list"

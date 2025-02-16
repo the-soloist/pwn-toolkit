@@ -21,7 +21,7 @@ SETTING = configparser.ConfigParser()
 SETTING.read(PU_HOME / "setting.ini")
 
 
-def config_context_termianl():
+def config_context_terminal():
     from pwn import context, log
 
     # Skip if terminal already configured
@@ -45,7 +45,7 @@ def init_pwn_args(parser=None):
     args.info = ArgInfo()
     args.env = ArgEnv()
 
-    config_context_termianl()
+    config_context_terminal()  # Fix typo in function name
 
     return args
 
