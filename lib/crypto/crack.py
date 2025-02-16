@@ -19,17 +19,18 @@ __all__ = [
 default_string_table = string.ascii_letters + string.digits
 
 
-def gen_strings_series(s, n=4, r=False):
-    """ s: strings, n: length, r: random"""
-    if r == False:
+def gen_strings_series(s, n=4, method="fixed"):
+    """ s: strings, n: length, method: fixed/random"""
+    if method == "fixed":
         for i in itertools.product(s, repeat=n):
             yield "".join(i)
-    else:
+    elif method == "random":
         while True:
             yield "".join(random.sample(s, n))
+    raise ValueError(f"Invalid generation method: {method}")
 
 
-def do_hash_pow(mode: str, target: str, prefixes="", suffixes="", strings=default_string_table, length=4, random=False):
+def do_hash_pow(mode: str, target: str, prefixes="", suffixes="", strings=default_string_table, strmethod="fixed", length=4):
     """
     Arguments:
       mode: 哈希函数
@@ -37,6 +38,7 @@ def do_hash_pow(mode: str, target: str, prefixes="", suffixes="", strings=defaul
       prefixes: 前缀
       suffixes: 后缀
       strings: 字符集，默认为大小写字母+数字
+      strmethod: 生成方式 (fixed/random)
       length: 未知内容长度
       random: 字典顺序随机生成
 
@@ -45,28 +47,27 @@ def do_hash_pow(mode: str, target: str, prefixes="", suffixes="", strings=defaul
 
     Example:
       >>> mode, unknown, salt, target = (x.decode() for x in re.split(b"[\(\)+= \n]", p.ru(b"\n")) if x)
-      >>> res = do_hash_pow(mode, target, suffixes=salt)
+      >>> res = do_hash_pow(mode, target, prefixes="xxx", suffixes=salt, strmethod="fixed", length=6)
     """
 
-    assert not prefixes and not suffixes
-    assert mode in dir(hashlib)
+    assert mode in dir(hashlib), f"Unsupported hash algorithm: {mode}"
 
-    plog.waitfor(f"cracking: {mode}({' + '.join([x for x in [prefixes, '?' * length, suffixes] if x])}) == {target}")
+    plog.waitfor(f"Cracking: {mode}('{prefixes}' + '{"?"*length}' + '{suffixes}') == {target}")
 
-    for i in gen_strings_series(strings, length, random):
+    for i in gen_strings_series(strings, length, method=strmethod):
         content = prefixes + i + suffixes
-        # print(f"test: {content}")
         obj = hashlib.__get_builtin_constructor(mode)()
         obj.update(content.encode())
+
         if obj.hexdigest() == target:
-            plog.success(f"found {mode}({content}) == {target}")
+            plog.success(f"Found {mode}({content}) == {target}")
             return i
 
-    plog.failure("not found")
+    plog.failure("No solution found")
     return None
 
 
-def do_hash_pow_m(mode: str, target: str, prefixes="", suffixes="", strings=default_string_table, strmethod="upto", length=6, thread=16):
+def do_hash_pow_m(mode: str, target: str, prefixes="", suffixes="", strings=default_string_table, strmethod="upto", length=6, threads=16):
     """
     Arguments:
       mode: 哈希函数
@@ -74,25 +75,29 @@ def do_hash_pow_m(mode: str, target: str, prefixes="", suffixes="", strings=defa
       prefixes: 前缀
       suffixes: 后缀
       strings: 字符集，默认为大小写字母+数字
-      strmethod: 同 mbruteforce 的 method 参数
+      strmethod: 同 mbruteforce 的 method 参数 (fixed/upto/downfrom)
       length: 字符串长度
-      thread: 线程数
+      threads: 线程数
 
     Example:
       >>> mode, unknown, salt, target = (x.decode() for x in re.split(b"[\(\)+= \n]", p.ru(b"\n")) if x)
-      >>> res = do_hash_pow_m(mode, target, suffixes=salt)
+      >>> res = do_hash_pow_m(mode, target, prefixes="xxx", suffixes=salt, length=8)
     """
 
-    assert not prefixes and not suffixes
-    assert mode in dir(hashlib)
+    assert mode in dir(hashlib), f"Unsupported hash algorithm: {mode}"
 
-    def brute(cur):
-        content = prefixes + str(cur) + suffixes
+    plog.waitfor(f"Cracking: {mode}('{prefixes}' + '{"?"*length}' + '{suffixes}') == {target}")
+
+    def brute(cur: str) -> bool:
+        content = prefixes + cur + suffixes  # cur is already a string
         obj = hashlib.__get_builtin_constructor(mode)()
         obj.update(content.encode())
-        if obj.hexdigest() == target:
-            return True
-        return False
+        return obj.hexdigest() == target
 
-    res = mbruteforce(brute, strings, method=strmethod, length=length, threads=thread)
+    res = mbruteforce(brute, strings, method=strmethod, length=length, threads=threads)
+
+    if res:
+        plog.success(f"Found {mode}({prefixes}{res}{suffixes}) == {target}")
+    else:
+        plog.failure("No solution found")
     return res
