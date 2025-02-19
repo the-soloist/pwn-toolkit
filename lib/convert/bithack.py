@@ -70,9 +70,9 @@ class Number:
         if self.ntype == "float" and self.bits == 64:
             self.ntype = "double"
 
-        self.nrange["min_signed"] = -(1 << self.bits - 1) + 1
-        self.nrange["max_signed"] = 1 << self.bits - 1
-        self.nrange["max_unsigned"] = (1 << self.bits - 1) - 1
+        self.nrange["min_signed"] = -(1 << (self.bits - 1))
+        self.nrange["max_signed"] = (1 << (self.bits - 1)) - 1
+        self.nrange["max_unsigned"] = (1 << self.bits) - 1
 
         self.num = self.n2int(self.n, self.bits)
 
@@ -104,6 +104,8 @@ class Number:
         print(f"Hex:          {hex(self.num)}")
         print(f"Binary:       {bin(self.num)}")
         print("--------------------------------------------------")
+        print(f"Decimal:      {self.num} (unsigned)")
+        print(f"              {sintX(self.num, self.bits)} (signed)")
         print(f"Bits:         {self.bits}")
         print(f"Min signed:   {hex(self.nrange['min_signed'])} ({self.nrange['min_signed']})")
         print(f"Max signed:   {hex(self.nrange['max_signed'])} ({self.nrange['max_signed']})")
