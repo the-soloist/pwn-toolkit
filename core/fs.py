@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Union
 import shutil
 import os
-from pwnkit.core.log import ulog
+# from pwnkit.core.log import ulog
 
 __all__ = [
     "mkdir_s",
@@ -32,10 +32,10 @@ def mkdir_s(path: Union[str, Path]) -> Path:
     path = Path(path)
     try:
         path.mkdir(parents=True, exist_ok=True)
-        ulog.debug(f"Created directory: {path}")
+        # ulog.debug(f"Created directory: {path}")
         return path
     except OSError as e:
-        ulog.error(f"Failed to create directory {path}: {str(e)}")
+        # ulog.error(f"Failed to create directory {path}: {str(e)}")
         raise
 
 
@@ -55,10 +55,10 @@ def touch_s(path: Union[str, Path]) -> Path:
     try:
         mkdir_s(path.parent)
         path.touch(exist_ok=True)
-        ulog.debug(f"Created file: {path}")
+        # ulog.debug(f"Created file: {path}")
         return path
     except OSError as e:
-        ulog.error(f"Failed to create file {path}: {str(e)}")
+        # ulog.error(f"Failed to create file {path}: {str(e)}")
         raise
 
 
@@ -75,12 +75,12 @@ def rm_s(path: Union[str, Path]) -> None:
     try:
         if path.is_file() or path.is_symlink():
             path.unlink()
-            ulog.debug(f"Removed file: {path}")
+            # ulog.debug(f"Removed file: {path}")
         elif path.is_dir():
             shutil.rmtree(path)
-            ulog.debug(f"Removed directory: {path}")
+            # ulog.debug(f"Removed directory: {path}")
     except OSError as e:
-        ulog.error(f"Failed to remove {path}: {str(e)}")
+        # ulog.error(f"Failed to remove {path}: {str(e)}")
         raise
 
 
@@ -101,13 +101,13 @@ def cp_s(src: Union[str, Path], dst: Union[str, Path]) -> Path:
     try:
         if src.is_file():
             shutil.copy2(src, dst)
-            ulog.debug(f"Copied file from {src} to {dst}")
+            # ulog.debug(f"Copied file from {src} to {dst}")
         elif src.is_dir():
             shutil.copytree(src, dst)
-            ulog.debug(f"Copied directory from {src} to {dst}")
+            # ulog.debug(f"Copied directory from {src} to {dst}")
         return dst
     except OSError as e:
-        ulog.error(f"Failed to copy from {src} to {dst}: {str(e)}")
+        # ulog.error(f"Failed to copy from {src} to {dst}: {str(e)}")
         raise
 
 
@@ -127,10 +127,10 @@ def mv_s(src: Union[str, Path], dst: Union[str, Path]) -> Path:
     src, dst = Path(src), Path(dst)
     try:
         shutil.move(str(src), str(dst))
-        ulog.debug(f"Moved from {src} to {dst}")
+        # ulog.debug(f"Moved from {src} to {dst}")
         return dst
     except OSError as e:
-        ulog.error(f"Failed to move from {src} to {dst}: {str(e)}")
+        # ulog.error(f"Failed to move from {src} to {dst}: {str(e)}")
         raise
 
 
@@ -149,5 +149,5 @@ def is_empty_dir(path: Union[str, Path]) -> bool:
             return False
         return not any(path.iterdir())
     except OSError as e:
-        ulog.error(f"Failed to check directory {path}: {str(e)}")
+        # ulog.error(f"Failed to check directory {path}: {str(e)}")
         return False

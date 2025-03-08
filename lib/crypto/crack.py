@@ -69,7 +69,7 @@ def do_hash_pow(mode: str, target: str, prefixes="", suffixes="", strings=defaul
 
     assert mode in dir(hashlib), f"Unsupported hash algorithm: {mode}"
 
-    plog.waitfor(f"Cracking: {mode}('{prefixes}' + '{"?"*length}' + '{suffixes}') == {target}")
+    plog.waitfor(f"Cracking: {mode}(\'{prefixes}\' + \'{'?'*length}\' + \'{suffixes}\') == {target}")
 
     for i in gen_strings_series(strings, length, method=strmethod):
         content = prefixes + i + suffixes
@@ -111,7 +111,7 @@ def do_hash_pow_m(mode: str, target: str, prefixes="", suffixes="", strings=defa
 
     assert mode in dir(hashlib), f"Unsupported hash algorithm: {mode}"
 
-    plog.waitfor(f"Cracking: {mode}('{prefixes}' + '{"?"*length}' + '{suffixes}') == {target}")
+    plog.waitfor(f"Cracking: {mode}(\'{prefixes}\' + \'{'?'*length}\' + \'{suffixes}\') == {target}")
 
     def brute(cur: str) -> bool:
         content = prefixes + cur + suffixes  # cur is already a string
