@@ -3,11 +3,10 @@
 
 import psutil
 import sys
-from pathlib import Path
+from os import get_terminal_size
 from psutil._common import bytes2human
-from psutil._compat import get_terminal_size
+from pwn import process
 from pwnkit.lib.log import plog
-from pwn import gdb, log, process
 
 
 def safe_print(s):

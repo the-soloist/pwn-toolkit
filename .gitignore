@@ -401,6 +401,8 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/linux,macos,windows,visualstudiocode,pycharm,vim,python
 
+### Custom ###
+
 **/.clang-format
 **/.nvimlog
 
