@@ -42,6 +42,11 @@ class DebugServer:
     def __del__(self):
         self.logout()
 
+    def _update(self, service_port: int, command_port: int, gdbserver_port: int):
+        self.SERVICE_PORT = service_port
+        self.COMMAND_PORT = command_port
+        self.GDBSERVER_PORT = gdbserver_port
+
     def _sock_send_once(self, payload):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)  # UDP
         sock.sendto(payload, (self.HOST, self.COMMAND_PORT))
