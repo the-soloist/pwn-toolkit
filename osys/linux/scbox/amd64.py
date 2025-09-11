@@ -1,10 +1,7 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-from pwnlib.constants.linux import amd64 as constants
 
 from pwnkit.osys.linux.mem import bytes2mem
-
+from pwnlib.constants.linux import amd64 as constants
 
 """ 64 bits shellcode """
 
@@ -26,7 +23,7 @@ def write_to_stack(text: bytes):
 
     for v in bytes2mem(text, 64, "little")[::-1]:
         code.append(f"mov rax, {hex(v)}")
-        code.append(f"push rax")
+        code.append("push rax")
 
     return "\n".join(code)
 

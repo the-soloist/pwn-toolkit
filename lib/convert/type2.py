@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
-from Crypto.Util.number import bytes_to_long, long_to_bytes
-from pwnlib.exception import PwnlibException
 from typing import Union
+
+from Crypto.Util.number import long_to_bytes
+from pwnlib.exception import PwnlibException
 
 
 def var2bytes(s, encoding="utf-8") -> Union[bytes, bytearray]:

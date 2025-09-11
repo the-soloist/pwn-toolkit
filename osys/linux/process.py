@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
-import os
 import psutil
 from pwnkit.lib.log import plog
 
@@ -30,16 +28,16 @@ def get_pid_by_name(name):
 def kill_process_by_name(name):
     """Kill all processes with the given name and log the result."""
     pid_list = get_pid_by_name(name)
-    
+
     if not pid_list:
         plog.info(f"No processes found with name: {name}")
         return
-    
+
     killed_pids = []
     for pid in pid_list:
         if kill_pid(pid):
             killed_pids.append(pid)
-    
+
     if killed_pids:
         plog.info(f"Killed {name} processes with PIDs: {killed_pids}")
     else:

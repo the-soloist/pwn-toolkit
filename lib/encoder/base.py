@@ -1,23 +1,20 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+
+import base64
+from typing import Union
 
 import base45
 import base58
 import base62
-import base64
 import base91
 import pybase100 as base100
-import inspect
-
-from typing import Union
-
-from pwnkit.lib.convert.type2 import v2s, v2b
+from pwnkit.lib.convert.type2 import v2b, v2s
 from pwnkit.pkg import base92
 
 default_table = {
     "b16": b"0123456789ABCDEF",
     "b32": b"ABCDEFGHIJKLMNOPQRSTUVWXYZ234567",
-    "b45": b"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+\-./:",
+    "b45": rb"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+\-./:",
     "b58": b"123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz",
     "b64": b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
 }

@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 
 def low_nbits(n: int, bits: int):
@@ -13,7 +12,7 @@ def pad_bits(n: int, align):
 
 def pad_bytes(s: bytes, align: int, just: str, pad=b"\x00"):
     """
-    @param 
+    @param
         just: "rjust", "ljust"
     """
     assert just in ["ljust", "rjust"]

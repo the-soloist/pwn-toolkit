@@ -1,14 +1,12 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import logging
-from pwn import log
-from pwnlib.exception import PwnlibException
-from pwnlib.log import console, Formatter, Logger
-from pwnlib.term import text
-from tqdm import tqdm
 
 from pwnkit.core import color
+from pwnlib.exception import PwnlibException
+from pwnlib.log import Formatter, Logger, console
+from pwnlib.term import text
+from tqdm import tqdm
 
 __all__ = [
     "PwnLogger",
@@ -47,7 +45,7 @@ class LogFormatter(Formatter):
 
         if msgtype in _msgtype_prefixes:
             style, symb = _msgtype_prefixes[msgtype]
-            prefix = "[%s] " % style(symb)
+            prefix = f"[{style(symb)}] "
         elif msgtype == "indented":
             prefix = self.indent
         elif msgtype == "animated":
@@ -80,7 +78,7 @@ class PwnLogger(Logger):
         self.message(name, msg)
 
 
-class TqdmLogger(object):
+class TqdmLogger:
     text_info = f"[{color.prefix_info}*{color.end}] "
     text_success = f"[{color.prefix_success}+{color.end}] "
     text_warning = f"[{color.prefix_warn}!{color.end}] "
@@ -153,7 +151,7 @@ if __name__ == "__main__":
 
     try:
         plog.error("test")
-    except:
+    except Exception:
         pass
 
     tlog.address(test=0xDEADBEEF)
@@ -167,5 +165,5 @@ if __name__ == "__main__":
 
     try:
         tlog.error("test")
-    except:
+    except Exception:
         pass

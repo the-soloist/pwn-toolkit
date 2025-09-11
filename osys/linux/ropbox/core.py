@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import functools
-from typing import Union, List, Generator
-from pwn import ELF
+from collections.abc import Generator
+from typing import List, Union
 
-from pwnkit.lib.system.linux import search_gadget
+from pwn import ELF
 from pwnkit.core.log import ulog
+from pwnkit.lib.system.linux import search_gadget
 
 __all__ = [
     "GadgetBox",

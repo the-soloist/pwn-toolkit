@@ -1,10 +1,7 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-from pwnlib.constants.linux import i386 as constants
 
 from pwnkit.osys.linux.mem import bytes2mem
-
+from pwnlib.constants.linux import i386 as constants
 
 """ 32 bits shellcode """
 
@@ -26,7 +23,7 @@ def write_to_stack(text: bytes):
 
     for v in bytes2mem(text, 32, "little")[::-1]:
         code.append(f"mov eax, {hex(v)}")
-        code.append(f"push eax")
+        code.append("push eax")
 
     return "\n".join(code)
 

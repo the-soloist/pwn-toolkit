@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
-from .utils import is_stack_variable
 from qiling import Qiling
 from qiling.os.const import POINTER
+
+from .utils import is_stack_variable
 
 
 def strcpy_hook(ql: Qiling):

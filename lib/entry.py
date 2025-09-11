@@ -1,13 +1,11 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import os
 from argparse import Namespace
-from pwn import process, remote, gdb, log
 from typing import Union
 
+from pwn import gdb, log, process, remote
 from pwnkit.core.log import ulog
-
 
 __all__ = [
     "pwntube",
@@ -50,7 +48,7 @@ def pwntube(args: Namespace, force=None):
         log_levels = {
             1: "INFO",
             2: "DEBUG",
-            3: "TRACE"
+            3: "TRACE",
         }
         ulog.level(log_levels.get(args.verbose, "ERROR"))
 
@@ -123,7 +121,7 @@ def pwntube(args: Namespace, force=None):
 
     # debug mode
     elif args.debug:
-        """ 
+        """
         Run with debug mode:
 
           >>> args.env.kwargs = {"gdbscript": GDB_SCRIPT, }

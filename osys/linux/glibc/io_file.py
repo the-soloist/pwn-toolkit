@@ -1,7 +1,6 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
-from pwn import FileStructure, hexdump, log, context
+from pwn import FileStructure, context, hexdump, log
 
 __all__ = [
     "IO_FILE_plus",

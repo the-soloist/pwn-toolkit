@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import stat
+
 from paramiko import SFTPClient
 from pwn import log
 
@@ -10,7 +10,7 @@ def is_exists(sftp_client: SFTPClient, path):
     try:
         return sftp_client.stat(path)
     except Exception as e:
-        log.error(f"error: {e}")   
+        log.error(f"error: {e}")
         return False
 
 

@@ -1,13 +1,12 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import hashlib
 import itertools
 import random
 import string
-from pwnlib.util.iters import bruteforce, mbruteforce
 
 from pwnkit.lib.log import plog
+from pwnlib.util.iters import mbruteforce
 
 __all__ = [
     "gen_strings_series",
@@ -63,7 +62,7 @@ def do_hash_pow(mode: str, target: str, prefixes="", suffixes="", strings=defaul
 
     Example:
         >>> # Find 4-character string where md5("pre"+xxx+"post") matches target
-        >>> solution = do_hash_pow("md5", "d3addcbfd4a13264e7d...", 
+        >>> solution = do_hash_pow("md5", "d3addcbfd4a13264e7d...",
         ...                        prefixes="pre", suffixes="post", length=4)
     """
 
@@ -91,7 +90,7 @@ def do_hash_pow_m(mode: str, target: str, prefixes="", suffixes="", strings=defa
         mode (str): Hash algorithm name (must be in hashlib)
         target (str): Target hex digest to match
         prefixes (str): Fixed prefix before the unknown part
-        suffixes (str): Fixed suffix after the unknown part  
+        suffixes (str): Fixed suffix after the unknown part
         strings (str): Character set for unknown part
         strmethod (str): mbruteforce generation method:
             - "fixed": Exact length (default)
@@ -105,7 +104,7 @@ def do_hash_pow_m(mode: str, target: str, prefixes="", suffixes="", strings=defa
 
     Example:
         >>> # Find string up to 8 chars using 16 threads
-        >>> solution = do_hash_pow_m("sha256", "aec7f1...", 
+        >>> solution = do_hash_pow_m("sha256", "aec7f1...",
         ...                          prefixes="start", length=8, threads=16)
     """
 
