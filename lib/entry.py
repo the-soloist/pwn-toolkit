@@ -6,10 +6,9 @@ from typing import Any, Union
 
 from pwn import gdb, log
 from pwnkit.core.log import ulog
+from pwnkit.lib.tubes import websocket
 from pwnlib.tubes.process import process
 from pwnlib.tubes.remote import remote
-
-from lib.tubes import websocket
 
 __all__ = [
     "pwntube",
@@ -65,8 +64,6 @@ def pwntube(args: Namespace, force=None) -> process | remote | websocket | Any:
     # websocket mode
     elif args.websocket:
         """ args.info.target = {"url": "wss://example.server"} """
-        from pwnkit.lib.tubes import websocket
-
         io = websocket(**args.info.target)
         io._process_mode = "websocket"
 
