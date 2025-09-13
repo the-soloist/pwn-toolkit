@@ -2,10 +2,14 @@
 
 import os
 from argparse import Namespace
-from typing import Union
+from typing import Any, Union
 
-from pwn import gdb, log, process, remote
+from pwn import gdb, log
 from pwnkit.core.log import ulog
+from pwnlib.tubes.process import process
+from pwnlib.tubes.remote import remote
+
+from lib.tubes import websocket
 
 __all__ = [
     "pwntube",
@@ -29,7 +33,7 @@ def _delete_unexpected_keyword(arg: dict, klist: list[str]) -> None:
         arg.pop(k, None)
 
 
-def pwntube(args: Namespace, force=None):
+def pwntube(args: Namespace, force=None) -> process | remote | websocket | Any:
     """
     Arguments:
         force(str):
