@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import logging
-from pwn import log
 from pwnkit.core import color
 from pwnlib.exception import PwnlibException
 from pwnlib.log import Formatter, Logger, console
@@ -9,10 +8,10 @@ from pwnlib.term import text
 from tqdm import tqdm
 
 __all__ = [
-    "PwnLogger",
-    "plog",
     "TqdmLogger",
     "tlog",
+    "PwnLogger",
+    "plog",
 ]
 
 
