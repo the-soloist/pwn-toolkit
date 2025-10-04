@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from pwn import log
 from pwnlib.exception import PwnlibException
 from pwnlib.log import console, Formatter, Logger
 from pwnlib.term import text

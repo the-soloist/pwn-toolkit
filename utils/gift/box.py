@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from typing import Any
+import datetime
 import os
 import stat
 from paramiko import SFTPClient
@@ -67,3 +69,9 @@ def init_ssh_challenge(client: SFTPClient, challenge_dir, file_list):
             continue
         client.put(local_path, str(remote_path))
         client.chmod(str(remote_path), os.stat(local_path).st_mode)
+
+
+def get_current_time(fmt="%Y-%m-%d-%H-%M-%S"):
+    # 默认格式化为 "年-月-日-时-分-秒"
+    now = datetime.datetime.now()
+    return now.strftime(fmt)
