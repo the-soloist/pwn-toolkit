@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from pwnlib.tubes.ssh import ssh as SSH
 from pwnlib.elf.elf import ELF
 
