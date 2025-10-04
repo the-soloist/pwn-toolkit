@@ -1,13 +1,14 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import os
 from argparse import Namespace
-from pwn import process, remote, gdb, log
-from typing import Union
+from typing import Any, Union
 
+from pwn import gdb, log
 from pwnkit.core.log import ulog
-
+from pwnkit.lib.tubes import websocket
+from pwnlib.tubes.process import process
+from pwnlib.tubes.remote import remote
 
 __all__ = [
     "pwntube",
@@ -31,7 +32,7 @@ def _delete_unexpected_keyword(arg: dict, klist: list[str]) -> None:
         arg.pop(k, None)
 
 
-def pwntube(args: Namespace, force=None):
+def pwntube(args: Namespace, force=None) -> process | remote | websocket | Any:
     """
     Arguments:
         force(str):
@@ -50,7 +51,7 @@ def pwntube(args: Namespace, force=None):
         log_levels = {
             1: "INFO",
             2: "DEBUG",
-            3: "TRACE"
+            3: "TRACE",
         }
         ulog.level(log_levels.get(args.verbose, "ERROR"))
 
@@ -63,8 +64,6 @@ def pwntube(args: Namespace, force=None):
     # websocket mode
     elif args.websocket:
         """ args.info.target = {"url": "wss://example.server"} """
-        from pwnkit.lib.tubes import websocket
-
         io = websocket(**args.info.target)
         io._process_mode = "websocket"
 
@@ -123,7 +122,7 @@ def pwntube(args: Namespace, force=None):
 
     # debug mode
     elif args.debug:
-        """ 
+        """
         Run with debug mode:
 
           >>> args.env.kwargs = {"gdbscript": GDB_SCRIPT, }

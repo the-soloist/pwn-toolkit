@@ -1,24 +1,21 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import socket
 import struct
 import time
-
 from dataclasses import dataclass
+
+from pwnkit.lib.log import plog
+from pwnkit.osys.linux.process import kill_process_by_name
 from pwnlib import gdb
 from pwnlib.tubes.remote import remote
 from pwnlib.tubes.tube import tube
 from pwnlib.ui import pause
 from pwnlib.util import misc
 
-from pwnkit.lib.log import plog
-from pwnkit.osys.linux.process import kill_process_by_name
-
 __all__ = [
     "DEFAULT_SPLITMIND_CONFIG",
-    "dbgsrv,"
-    "init_debug_server",
+    "dbgsrv",
     "tube_debug",
 ]
 
@@ -42,6 +39,11 @@ class DebugServer:
     def __del__(self):
         self.logout()
 
+    def _update(self, service_port: int, command_port: int, gdbserver_port: int):
+        self.SERVICE_PORT = service_port
+        self.COMMAND_PORT = command_port
+        self.GDBSERVER_PORT = gdbserver_port
+
     def _sock_send_once(self, payload):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)  # UDP
         sock.sendto(payload, (self.HOST, self.COMMAND_PORT))
@@ -50,7 +52,7 @@ class DebugServer:
         return data, address
 
     def init(self, host="", connect=False, wait=0) -> remote | tuple[str, int]:
-        """ 
+        """
         Arguments:
             host(str): set debug server host
             connect(bool): connect to server port, usually for debug web server
@@ -80,7 +82,7 @@ class DebugServer:
             self._sock_send_once(struct.pack("B", self.COMMAND_GDB_LOGOUT))
 
     def attach_gdbserver(self, gdb_scripts="", gdb_args=[]) -> int | None:
-        script_path = f"/tmp/temp_gdb_script"
+        script_path = "/tmp/temp_gdb_script"
         open(script_path, "w").write(gdb_scripts)
 
         data, _ = self._sock_send_once(struct.pack("BB", 0x02, len(script_path)) + script_path.encode())
@@ -91,8 +93,10 @@ class DebugServer:
         cmd = [
             gdb.binary(),
             "-q",
-            "-ex", f"target remote {self.HOST}:{self.GDBSERVER_PORT}",
-            "-x", script_path
+            "-ex",
+            f"target remote {self.HOST}:{self.GDBSERVER_PORT}",
+            "-x",
+            script_path,
         ] + gdb_args
 
         return misc.run_in_new_terminal(cmd)
@@ -101,7 +105,7 @@ class DebugServer:
         self._sock_send_once(struct.pack("B", self.COMMAND_STRACE_ATTACH))
 
     def get_address(self, search_str):
-        data, _ = self._sock_send_once(struct.pack('BB', 0x04, len(search_str.encode())) + search_str.encode())
+        data, _ = self._sock_send_once(struct.pack("BB", 0x04, len(search_str.encode())) + search_str.encode())
         return data
 
     def run_service(self):
@@ -111,9 +115,17 @@ class DebugServer:
 dbgsrv: DebugServer = DebugServer()
 
 
-def tube_debug(target, gdbscript="", gdb_debug_symbols: dict = {}, gdb_breakpoints: list = [],
-               exe=None, gdb_args=[], ssh=None, sysroot=None, api=False):
-
+def tube_debug(
+    target,
+    gdbscript="",
+    gdb_debug_symbols: dict = {},
+    gdb_breakpoints: list = [],
+    exe=None,
+    gdb_args=[],
+    ssh=None,
+    sysroot=None,
+    api=False,
+):
     if not isinstance(target, tube):
         gdb.attach(target, gdbscript, exe=exe, gdb_args=gdb_args, ssh=ssh, sysroot=sysroot, api=api)
 
@@ -164,7 +176,6 @@ end
 set context-stack-lines 8
 set context-source-code-lines 15
 set context-code-lines 20\n""",
-
     # focus on code pane
     "code": """python
 import splitmind
@@ -184,5 +195,5 @@ end
 
 set context-stack-lines 8
 set context-source-code-lines 25
-set context-code-lines 15\n"""
+set context-code-lines 15\n""",
 }

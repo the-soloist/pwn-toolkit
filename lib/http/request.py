@@ -1,10 +1,8 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import urllib
 
 from pwnkit.lib.convert.type2 import v2b
-
 
 CRLF = b"\r\n"
 
@@ -16,7 +14,7 @@ urlencode = urllib.parse.quote
 def urlencode2bytes(s) -> bytes:
     res = b""
     for c in s:
-        res += bytes("%{:02x}".format(c), encoding="utf-8")
+        res += bytes(f"%{c:02x}", encoding="utf-8")
     return res
 
 

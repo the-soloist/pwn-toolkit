@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import argparse
 
 from pwnkit.lib.convert.bithack import Number

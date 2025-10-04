@@ -1,9 +1,8 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
-from pwn import ELF
 from pathlib import Path
 
+from pwn import ELF
 from pwnkit.lib.log import plog
 
 

@@ -1,10 +1,9 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import html
 import urllib
 
-from pwnkit.lib.convert.type2 import v2s, v2b, c2us
+from pwnkit.lib.convert.type2 import c2us, v2b, v2s
 
 
 def hex_encode(text) -> str:

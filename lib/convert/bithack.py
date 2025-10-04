@@ -1,8 +1,7 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import struct
-from typing import Union, Dict, Optional
+from typing import Dict, Optional, Union
 
 
 def uint8(n: int) -> int:

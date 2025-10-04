@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import math
+
 from pwnkit.lib.convert.type2 import b2i, v2b
 
 
@@ -13,10 +13,10 @@ def bytes2mem(string, mode=64, endian="little"):
     assert mode % 8 == 0, "Mode must be a multiple of 8"
     bytes_align = mode // 8
     string = v2b(string)
-    
+
     # Calculate exact number of chunks needed
     chunks = math.ceil(len(string) / bytes_align)
-    
+
     # Use list comprehension for better performance
-    return [b2i(string[i * bytes_align:(i + 1) * bytes_align], endian) 
+    return [b2i(string[i * bytes_align:(i + 1) * bytes_align], endian)
             for i in range(chunks)]

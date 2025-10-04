@@ -1,16 +1,11 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-from pwn import u64
-from pwnlib.timeout import Timeout
-from pwnlib.tubes.tube import tube
-from typing import Union
-from websocket import WebSocket, ABNF, WebSocketException, WebSocketTimeoutException
 
 from pwnkit.core.log import ulog
 from pwnkit.lib.debug import tube_debug
 from pwnkit.lib.log import plog
-
+from pwnlib.timeout import Timeout
+from pwnlib.tubes.tube import tube
+from websocket import ABNF, WebSocket, WebSocketException, WebSocketTimeoutException
 
 __all__ = [
     "websocket",
@@ -35,7 +30,7 @@ class websocket(tube):
     def __init__(self, url, headers=None, *args, **kwargs):
         if headers is None:
             headers = {}
-        super(websocket, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.closed = False
         self.sock = WebSocket()
         self.url = url
@@ -69,7 +64,7 @@ class websocket(tube):
 
         try:
             self.sock.send_binary(data)
-        except WebSocketException as e:
+        except WebSocketException:
             self.shutdown()
             raise EOFError("Send Error")
 
@@ -82,7 +77,7 @@ class websocket(tube):
             self.sock.ping()
             opcode, data = self.sock.recv_data(True)
             return opcode == ABNF.OPCODE_PONG
-        except:
+        except Exception:
             return False
 
     def close(self):

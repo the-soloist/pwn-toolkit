@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
-import psutil
 import sys
 from os import get_terminal_size
+
+import psutil
 from psutil._common import bytes2human
 from pwn import process
 from pwnkit.lib.log import plog
@@ -21,17 +21,17 @@ def safe_print(s):
 def get_base(libs=None, elf=None, p=None):
     """
     Get base addresses for text and libc sections.
-    
+
     Usage:
         text_base, libc_base = get_base(libs=p.libs(), elf=elf)
         text_base, libc_base = get_base(p=p)
-    
+
     Returns:
         tuple: (text_base_address, libc_base_address)
     """
     if not libs and p:
         return get_text_base(p)
-    
+
     if not libs or not elf:
         plog.warning("get_base: requires either (libs and elf) or sh")
         return None, None
@@ -46,7 +46,7 @@ def get_base(libs=None, elf=None, p=None):
     for key in libs:
         if "libc" in key:
             return text_base, libs[key]
-    
+
     return text_base, None
 
 
@@ -61,7 +61,7 @@ def get_text_base(sh: process):
         tuple: (text_base_address, libc_base_address)
     """
     libs = sh.libs()
-    
+
     try:
         if sys.version_info.major >= 3:
             text_base = libs[str(sh.argv[0].strip(b"."), encoding="utf-8")]
@@ -75,7 +75,7 @@ def get_text_base(sh: process):
     for key in libs:
         if "libc" in key:
             return text_base, libs[key]
-    
+
     return text_base, None
 
 
@@ -101,7 +101,7 @@ def get_heap_map(proc: process):
     """
     p = psutil.Process(proc.pid)
     templ = "%-20s %10s  %-7s %s"
-    
+
     try:
         memory_maps = p.memory_maps(grouped=False)
         for m in memory_maps:
@@ -151,18 +151,18 @@ def print_all_map(proc: process):
         p = psutil.Process(proc.pid)
         templ = "%-20s %10s  %-7s %s"
         print(templ % ("Address", "RSS", "Mode", "Mapping"))
-        
+
         total_rss = 0
         mem_maps = p.memory_maps(grouped=False)
-        
+
         for m in mem_maps:
             total_rss += m.rss
             safe_print(templ % (m.addr.split("-")[0].zfill(16), bytes2human(m.rss), m.perms, m.path))
-        
+
         print("-" * 31)
         print(templ % ("Total", bytes2human(total_rss), "", ""))
         safe_print(f"PID = {p.pid}, name = {p.name()}")
-        
+
         return mem_maps
     except psutil.AccessDenied:
         plog.warning("print_all_map: access denied")
