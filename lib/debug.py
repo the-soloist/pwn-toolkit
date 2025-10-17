@@ -127,7 +127,7 @@ def tube_debug(
     api=False,
 ):
     if not isinstance(target, tube):
-        gdb.attach(target, gdbscript, exe=exe, gdb_args=gdb_args, ssh=ssh, sysroot=sysroot, api=api)
+        return gdb.attach(target, gdbscript, exe=exe, gdb_args=gdb_args, ssh=ssh, sysroot=sysroot, api=api)
 
     process_mode = getattr(target, "_process_mode", None)
 
@@ -146,13 +146,15 @@ def tube_debug(
     scripts = "\n".join(lines)
 
     if process_mode not in ["remote", "websocket"] and dbgsrv.is_register:
-        dbgsrv.attach_gdbserver(scripts, gdb_args)
+        res = dbgsrv.attach_gdbserver(scripts, gdb_args)
         pause()
+        return res
     else:
-        gdb.attach(target, scripts, exe=exe, gdb_args=gdb_args, ssh=ssh, sysroot=sysroot, api=api)
+        res = gdb.attach(target, scripts, exe=exe, gdb_args=gdb_args, ssh=ssh, sysroot=sysroot, api=api)
         if process_mode == "ssh":
             plog.waitfor("waiting remote process attached")
             pause()
+        return res
 
 
 DEFAULT_SPLITMIND_CONFIG = {
