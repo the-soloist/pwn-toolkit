@@ -58,11 +58,13 @@ def compile_symbol_file(src_file, salt="", arch=64):
 
 def init_ssh_challenge(client: SFTPClient, challenge_dir, file_list):
     if not stfp.is_exists(client, challenge_dir):
-        client.mkdir(challenge_dir)
+        client.mkdir(challenge_dir, mode=0o755)
 
     plog.waitfor(f"Uploading {file_list}")
     for local_path in file_list:
         remote_path = Path(challenge_dir) / local_path
+        if not stfp.is_dir(client, remote_path.parent):
+            client.mkdir(str(remote_path.parent), mode=0o755)
         if stfp.is_exists(client, remote_path):
             continue
         client.put(local_path, str(remote_path))
