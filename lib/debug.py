@@ -93,8 +93,6 @@ class DebugServer:
         cmd = [
             gdb.binary(),
             "-q",
-            "-ex",
-            f"target remote {self.HOST}:{self.GDBSERVER_PORT}",
             "-x",
             script_path,
         ] + gdb_args
