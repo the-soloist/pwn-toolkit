@@ -45,6 +45,10 @@ def init_pwn_args(parser=None):
 
     config_context_terminal()  # Fix typo in function name
 
+    if not args.debug and not args.local and not args.remote and not args.ssh and not args.websocket:
+        parser.print_help()
+        exit(1)
+
     return args
 
 
