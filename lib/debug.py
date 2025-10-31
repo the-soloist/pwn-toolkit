@@ -81,7 +81,7 @@ class DebugServer:
         if self.is_register:
             self._sock_send_once(struct.pack("B", self.COMMAND_GDB_LOGOUT))
 
-    def attach_gdbserver(self, gdb_scripts="", gdb_args=[]) -> int | None:
+    def attach_gdbserver(self, gdb_scripts="", gdb_args=[], pause=False):
         script_path = "/tmp/temp_gdb_script"
         open(script_path, "w").write(gdb_scripts)
 
@@ -97,7 +97,10 @@ class DebugServer:
             script_path,
         ] + gdb_args
 
-        return misc.run_in_new_terminal(cmd)
+        pid = misc.run_in_new_terminal(cmd)
+        if pause:
+            pause()
+        return pid
 
     def attach_strace(self):
         self._sock_send_once(struct.pack("B", self.COMMAND_STRACE_ATTACH))
