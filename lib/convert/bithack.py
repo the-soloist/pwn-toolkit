@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import ctypes
 import struct
 from typing import Dict, Optional, Union
 
@@ -48,6 +49,20 @@ def hex2float(n: int) -> float:
 
 def hex2double(n: int) -> float:
     return struct.unpack("<d", struct.pack("<Q", n))[0]
+
+
+def c_hex2float(hex_value):
+    # 方式1: 使用 c_uint32 和 c_float
+    i = ctypes.c_uint32(hex_value)
+    f = ctypes.cast(ctypes.pointer(i), ctypes.POINTER(ctypes.c_float))
+    return f.contents.value
+
+
+def c_hex2double(hex_value):
+    # 使用 c_uint64 和 c_double
+    i = ctypes.c_uint64(hex_value)
+    d = ctypes.cast(ctypes.pointer(i), ctypes.POINTER(ctypes.c_double))
+    return d.contents.value
 
 
 class Number:
